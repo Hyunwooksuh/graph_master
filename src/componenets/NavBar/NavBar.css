@@ -1,0 +1,31 @@
+.navbar {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: cornflowerblue;
+}
+
+.nav-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-size: 15px;
+  font-weight: bolder;
+  width: 100%;
+  background-color: rgb(143, 204, 143);
+  margin: 0 10px;
+  border-radius: 20px;
+}
+
+.nav-text:hover {
+  background-color: #d6e418;
+  cursor: pointer;
+}
+
+.nav-menu-items {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
