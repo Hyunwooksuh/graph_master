@@ -10,37 +10,32 @@ import "./Editor.css";
 
 import "codemirror/addon/edit/matchbrackets";
 import "codemirror/addon/edit/closebrackets";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import styled from "styled-components";
+import problemSet from "../../asset/problemSet";
 
 window.JSHINT = JSHINT;
 
+const Wrapper = styled.div`
+  .submit-button-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+  }
+
+  .submit-button {
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    border-radius: 15px;
+    background: steelblue;
+    font-size: 18px;
+    font-weight: bolder;
+  }
+`;
+
 export default function Editor() {
-  const template = `  
-  /**
-   * Definition for a binary tree node.
-   * function TreeNode(val, left, right) {
-   *  this.val = (val===undefined ? 0 : val)
-   *  this.left = (left===undefined ? null : left)
-   *  this.right = (right===undefined ? null : right)
-   * }
-   */
-
-  /**
-   * @param {TreeNode} root
-   * @return {number[]}
-   */
-  function GRAPH_MASTER(input) {
-    const output = [];
-    function preorderTraversal(node) {
-      // your code
-
-    }
-
-    preorderTraversal(input);
-    return output; 
-  };
-  `;
-
   const options = {
     mode: "javascript",
     theme: "shadowfox",
@@ -52,11 +47,21 @@ export default function Editor() {
     autoCloseBrackets: true,
   };
 
-  // 임시로 설정 -> 리덕스로 다시 셋팅예정
+  const { currentProblem } = useSelector((state) => state.problem);
+  const { isDebugging } = useSelector((state) => state.debug);
+  const problem = problemSet[currentProblem];
   const [value, setValue] = useState(null);
 
+  useEffect(() => {
+    if (problem) {
+      setValue(problem.template);
+    }
+  }, [problem]);
+
+  const handleClickSubmit = () => {};
+
   return (
-    <div>
+    <Wrapper>
       <CodeMirror
         className="CodeMirror"
         value={value}
@@ -65,6 +70,13 @@ export default function Editor() {
           setValue(value);
         }}
       />
-    </div>
+      {!isDebugging && currentProblem && (
+        <div className="submit-button-container">
+          <button className="submit-button" onClick={handleClickSubmit}>
+            ⏩ SUBMIT CODE
+          </button>
+        </div>
+      )}
+    </Wrapper>
   );
 }

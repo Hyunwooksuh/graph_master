@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { state } from "jshint/src/state";
 import Editor from "../Editor/Editor";
 import Modal from "../Modal/Modal";
 import NavBar from "../NavBar/NavBar";
@@ -11,8 +12,10 @@ import Tutorial from "../Modal/Nav/Tutorial";
 
 const PageWrapper = styled.div`
   display: flex;
+
   padding: 20px;
   height: 85%;
+  width: 100%;
 
   .editorSection {
     width: 30%;
@@ -21,7 +24,7 @@ const PageWrapper = styled.div`
   }
 
   .visualizationSection {
-    width: 55%;
+    width: ${(props) => (props.isDebugging ? "55%" : "70%")};
     margin: 0 2%;
     background-color: white;
     border-radius: 20px;
@@ -36,17 +39,18 @@ const PageWrapper = styled.div`
 
 export default function EditPage() {
   const { isOpen, currentModal } = useSelector((state) => state.modal);
+  const { isDebugging } = useSelector((state) => state.debug);
+  const { currentProblem } = useSelector((state) => state.problem);
+
   return (
     <>
-      <PageWrapper>
+      <PageWrapper isDebugging={isDebugging}>
         <div className="editorSection">
           <NavBar />
           <Editor />
         </div>
-        <div className="visualizationSection">
-          <Problem />
-        </div>
-        <div className="consoleSection" />
+        <div className="visualizationSection">{currentProblem && !isDebugging && <Problem />}</div>
+        {isDebugging && <div className="consoleSection" />}
       </PageWrapper>
       <Modal open={isOpen}>
         {currentModal === "Tutorial" && <Tutorial />}

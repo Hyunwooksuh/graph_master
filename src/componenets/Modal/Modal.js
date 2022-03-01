@@ -12,11 +12,14 @@ const ModalStyle = styled.div`
   position: fixed;
   top: 40%;
   left: 50%;
-  width: 30rem;
-  height: 30rem;
+  width: 35rem;
+  height: 25rem;
   transform: translate(-50%, -50%);
   background-color: beige;
   z-index: 1000;
+  padding: 40px;
+  border-radius: 20px;
+  background: #da70d6;
 `;
 
 const OverlayStyle = styled.div`
