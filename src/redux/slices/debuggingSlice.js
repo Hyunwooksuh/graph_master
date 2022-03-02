@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const debuggingSlices = createSlice({
-  name: "modal",
+  name: "debug",
   initialState: {
     isDebugging: false,
   },

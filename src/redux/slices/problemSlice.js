@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const problemSlices = createSlice({
-  name: "modal",
+  name: "problem",
   initialState: {
     currentProblem: null,
   },
@@ -12,5 +12,5 @@ const problemSlices = createSlice({
   },
 });
 
-export const { setProblem } = problemSlices.actions;
+export const { setProblem, submitCode } = problemSlices.actions;
 export default problemSlices.reducer;

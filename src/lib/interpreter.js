@@ -85,7 +85,7 @@ Interpreter.Completion = {
  */
 Interpreter.PARSE_OPTIONS = {
   locations: true,
-  ecmaVersion: 5,
+  ecmaVersion: 2020,
 };
 
 /**
@@ -365,7 +365,9 @@ Interpreter.prototype.step = function () {
       return true;
     }
     try {
+      // new Interpreter.State(node["argument"], state.scope);
       var nextState = this.stepFunctions_[type](stack, state, node);
+      
     } catch (e) {
       // Eat any step errors.  They have been thrown on the stack.
       if (e !== Interpreter.STEP_ERROR) {
@@ -2673,6 +2675,7 @@ Interpreter.prototype.nativeToPseudo = function (nativeObj) {
   for (const key in nativeObj) {
     this.setProperty(pseudoObj, key, this.nativeToPseudo(nativeObj[key]));
   }
+  
   return pseudoObj;
 };
 
@@ -3236,9 +3239,11 @@ Interpreter.prototype.populateScope_ = function (node, scope) {
   } else if (node["type"] === "ExpressionStatement") {
     return; // Expressions can't contain variable/function declarations.
   }
+
   const nodeClass = node["constructor"];
   for (const name in node) {
     const prop = node[name];
+
     if (prop && typeof prop === "object") {
       if (Array.isArray(prop)) {
         for (var i = 0; i < prop.length; i++) {
@@ -3522,7 +3527,7 @@ Interpreter.Scope = function (parentScope, strict, object) {
  * @param {Interpreter.Object} proto Prototype object or null.
  * @constructor
  */
-Interpreter.Object = function (proto, properties) {
+Interpreter.Object = function (proto) {
   this.getter = Object.create(null);
   this.setter = Object.create(null);
   this.properties = Object.create(null);

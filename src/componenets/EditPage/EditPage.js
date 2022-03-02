@@ -1,14 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { state } from "jshint/src/state";
 import Editor from "../Editor/Editor";
 import Modal from "../Modal/Modal";
 import NavBar from "../NavBar/NavBar";
 import Problem from "../Problem/Problem";
-import Help from "../Modal/Nav/Help";
 import Objective from "../Modal/Nav/Objective";
 import Tutorial from "../Modal/Nav/Tutorial";
+import Correct from "../Modal/Result/Correct";
+import Incorrect from "../Modal/Result/Incorrect";
+import Error from "../Modal/Result/Error";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -55,7 +56,9 @@ export default function EditPage() {
       <Modal open={isOpen}>
         {currentModal === "Tutorial" && <Tutorial />}
         {currentModal === "Objective" && <Objective />}
-        {currentModal === "Help" && <Help />}
+        {currentModal === "Correct" && <Correct />}
+        {currentModal === "Incorrect" && <Incorrect />}
+        {typeof currentModal === "object" && <Error />}
       </Modal>
     </>
   );

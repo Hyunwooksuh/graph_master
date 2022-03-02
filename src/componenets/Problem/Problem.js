@@ -5,6 +5,7 @@ import problemSet from "../../asset/problemSet";
 
 const ProblemContainer = styled.div`
   margin: 40px;
+  height: 100%;
 
   .problem-title {
     text-decoration: none;
@@ -20,13 +21,15 @@ const ProblemContainer = styled.div`
 
   .test-case-container {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: center;
     width: 100%;
   }
 
   .unique-test-case {
     display: grid;
     margin: 50px;
+    flex-basis: 25%;
   }
 `;
 
@@ -46,7 +49,7 @@ export default function Problem() {
             return (
               <div className="unique-test-case" key={shortInput}>
                 <div>
-                  <h3>Example {index + 1}</h3>
+                  <h2>Example {index + 1}</h2>
                 </div>
                 <div>Input: {shortInput}</div>
                 <div>Output: {answer}</div>

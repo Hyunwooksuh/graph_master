@@ -11,9 +11,11 @@ import "./Editor.css";
 import "codemirror/addon/edit/matchbrackets";
 import "codemirror/addon/edit/closebrackets";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { setIsOpen } from "../../redux/slices/modalSlice";
 import problemSet from "../../asset/problemSet";
+import answerChecker from "../../lib/answerChecker";
 
 window.JSHINT = JSHINT;
 
@@ -47,6 +49,7 @@ export default function Editor() {
     autoCloseBrackets: true,
   };
 
+  const dispatch = useDispatch();
   const { currentProblem } = useSelector((state) => state.problem);
   const { isDebugging } = useSelector((state) => state.debug);
   const problem = problemSet[currentProblem];
@@ -58,7 +61,20 @@ export default function Editor() {
     }
   }, [problem]);
 
-  const handleClickSubmit = () => {};
+  const handleClickSubmit = (userCode) => {
+    // value에 저장된 값 제출하면됨 -> 현재 문제 삭제 dispatch
+    const result = answerChecker(userCode, currentProblem);
+
+    if (result) {
+      if (typeof result === "object") {
+        return dispatch(setIsOpen(result));
+      }
+
+      dispatch(setIsOpen("Correct"));
+    } else {
+      dispatch(setIsOpen("Incorrect"));
+    }
+  };
 
   return (
     <Wrapper>
@@ -72,7 +88,7 @@ export default function Editor() {
       />
       {!isDebugging && currentProblem && (
         <div className="submit-button-container">
-          <button className="submit-button" onClick={handleClickSubmit}>
+          <button className="submit-button" onClick={handleClickSubmit.bind(this, value)}>
             ⏩ SUBMIT CODE
           </button>
         </div>
