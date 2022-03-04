@@ -15,7 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { setIsOpen } from "../../redux/slices/modalSlice";
 import problemSet from "../../asset/problemSet";
-import answerChecker from "../../lib/answerChecker";
+import answerChecker, { initFunc, EnhancedInterpreter } from "../../lib/enhancedInterpreter";
+import { setSubmittedCode } from "../../redux/slices/problemSlice";
 
 window.JSHINT = JSHINT;
 
@@ -30,6 +31,22 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: center;
     width: 50%;
+    border-radius: 15px;
+    background: steelblue;
+    font-size: 18px;
+    font-weight: bolder;
+  }
+
+  .debugging-button-container {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 10px;
+  }
+
+  .debugging-button {
+    display: flex;
+    justify-content: center;
+    width: 40%;
     border-radius: 15px;
     background: steelblue;
     font-size: 18px;
@@ -50,20 +67,23 @@ export default function Editor() {
   };
 
   const dispatch = useDispatch();
-  const { currentProblem } = useSelector((state) => state.problem);
+  const { currentProblem, submittedCode } = useSelector((state) => state.problem);
   const { isDebugging } = useSelector((state) => state.debug);
   const problem = problemSet[currentProblem];
-  const [value, setValue] = useState(null);
+  const debuggingTarget = new EnhancedInterpreter(submittedCode, initFunc);
+  const [prevButtonDisabled, setPrevButtonDisabled] = useState(false);
+  const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
 
   useEffect(() => {
     if (problem) {
-      setValue(problem.template);
+      dispatch(setSubmittedCode(problem.template));
     }
   }, [problem]);
 
   const handleClickSubmit = (userCode) => {
-    // value에 저장된 값 제출하면됨 -> 현재 문제 삭제 dispatch
     const result = answerChecker(userCode, currentProblem);
+
+    dispatch(setSubmittedCode(userCode));
 
     if (result) {
       if (typeof result === "object") {
@@ -76,20 +96,48 @@ export default function Editor() {
     }
   };
 
+  const handleClickPrevStep = () => {};
+  const handleClickNextStep = () => {
+    const debuggingInfo = debuggingTarget.nextStep();
+    console.log(debuggingInfo.currentState);
+
+    if (!debuggingInfo.hasNextStep) {
+      setNextButtonDisabled(true);
+    }
+  };
+
   return (
     <Wrapper>
       <CodeMirror
         className="CodeMirror"
-        value={value}
+        value={submittedCode}
         options={options}
         onBeforeChange={(editor, data, value) => {
-          setValue(value);
+          dispatch(setSubmittedCode(value));
         }}
       />
       {!isDebugging && currentProblem && (
         <div className="submit-button-container">
-          <button className="submit-button" onClick={handleClickSubmit.bind(this, value)}>
+          <button className="submit-button" onClick={handleClickSubmit.bind(this, submittedCode)}>
             ⏩ SUBMIT CODE
+          </button>
+        </div>
+      )}
+      {isDebugging && (
+        <div className="debugging-button-container">
+          <button
+            disabled={prevButtonDisabled}
+            className="debugging-button"
+            onClick={handleClickPrevStep}
+          >
+            PREV STEP
+          </button>
+          <button
+            disabled={nextButtonDisabled}
+            className="debugging-button"
+            onClick={handleClickNextStep}
+          >
+            NEXT STEP
           </button>
         </div>
       )}

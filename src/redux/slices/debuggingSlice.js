@@ -7,7 +7,7 @@ const debuggingSlices = createSlice({
   },
   reducers: {
     setIsDebugging: (state, action) => {
-      state.isDebugging = !state.isDebugging;
+      state.isDebugging = action.payload.status;
     },
   },
 });

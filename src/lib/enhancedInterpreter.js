@@ -1,12 +1,12 @@
 import Interpreter from "./interpreter";
 import problemSet from "../asset/problemSet";
 
-class EnhancedInterpreter extends Interpreter {
+export class EnhancedInterpreter extends Interpreter {
   constructor(code, initFunc) {
     super(code, initFunc);
     this.code = code;
-    // this.scopeNames = ["Global"];
-    // this.callee = ["window"];
+    this.scopeNames = ["Global"];
+    this.callee = ["window"];
   }
 
   runSubmittedCode() {
@@ -18,6 +18,52 @@ class EnhancedInterpreter extends Interpreter {
     }
 
     return this.paused_;
+  }
+
+  nextStep() {
+    const hasNextStep = this.step();
+    const currentState = this.stateStack[this.stateStack.length - 1];
+    const { start, end } = currentState.node;
+
+    if (currentState.node.type === "Program" && currentState.done) {
+      return {
+        raw: currentState,
+        hasNextStep,
+        type: "End",
+        range: [start, end],
+      };
+    }
+
+    if (currentState.func_ && currentState.doneExec_) {
+      const { name } = currentState.func_.node.id;
+      this.scopeNames.push(name);
+      return {
+        currentScope: {
+          scopeName: this.scopeNames[this.scopeNames.length - 2] || null,
+          ...currentState.scope.object.properties,
+        },
+        raw: currentState,
+        hasNextStep,
+        type: currentState.node.type,
+        range: [start, end],
+      };
+    }
+
+    if (currentState.node.callee) {
+      this.callee.push(currentState.node.callee.name);
+    }
+
+    return {
+      currentScope: {
+        scopeName: this.scopeNames[this.scopeNames.length - 1],
+        ...currentState.scope.properties,
+        this: this.callee[this.callee.length - 1],
+      },
+      raw: currentState,
+      hasNextStep,
+      type: currentState.node.type,
+      range: [start, end],
+    };
   }
 }
 
@@ -42,7 +88,6 @@ export default function answerChecker(code, type) {
 
     const output = checker.pseudoToNative(checker.value);
     const answer = testCases[i].nativeArrayAnswer;
-    console.log(output, answer);
 
     for (let i = 0; i < answer.length; i++) {
       if (answer[i] !== output[i]) {

@@ -1,5 +1,9 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { setIsDebugging } from "../../../redux/slices/debuggingSlice";
+import { setIsOpen } from "../../../redux/slices/modalSlice";
+import { setProblem, setSubmittedCode } from "../../../redux/slices/problemSlice";
 
 const Wrapper = styled.div`
   display: grid;
@@ -30,6 +34,31 @@ const Wrapper = styled.div`
 `;
 
 export default function Correct() {
+  const dispatch = useDispatch();
+  const userSubmittedCode = useSelector((state) => state.problem.submittedCode);
+  const handleCloseModal = () => {
+    dispatch(setIsOpen());
+    dispatch(setSubmittedCode(""));
+    dispatch(setProblem(null));
+  };
+
+  const handleStartDebugging = () => {
+    dispatch(
+      setIsDebugging({
+        status: true,
+      }),
+    );
+
+    dispatch(
+      setSubmittedCode(`${userSubmittedCode}
+GRAPH_MASTER(input);
+    `),
+    );
+    // input 값 스코프에 주입
+
+    dispatch(setIsOpen());
+  };
+
   return (
     <Wrapper>
       <h2 className="correct-result">🥳 성공하셨네요 ! 🥳</h2>
@@ -39,8 +68,8 @@ export default function Correct() {
         edge case를 눈여겨보세요
       </div>
       <div className="correct-modal-button">
-        <button>아뇨, 다른 문제를 풀겠습니다.</button>
-        <button>네, 디버깅을 해보겠습니다.</button>
+        <button onClick={handleCloseModal}>아뇨, 다른 문제를 풀겠습니다.</button>
+        <button onClick={handleStartDebugging}>네, 디버깅을 해보겠습니다.</button>
       </div>
     </Wrapper>
   );

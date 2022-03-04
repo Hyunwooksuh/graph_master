@@ -2,7 +2,9 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { setIsOpen } from "../../../redux/slices/modalSlice";
-import { setProblem } from "../../../redux/slices/problemSlice";
+import { setProblem, setSubmittedCode } from "../../../redux/slices/problemSlice";
+import { setIsDebugging } from "../../../redux/slices/debuggingSlice";
+import problemSet from "../../../asset/problemSet";
 
 const Wrapper = styled.div`
   display: grid;
@@ -34,6 +36,7 @@ const Wrapper = styled.div`
 
 export default function Tutorial() {
   const dispatch = useDispatch();
+
   const traversals = [
     { title: "PREORDER TRAVERSAL", kind: "preorder" },
     { title: "INORDER TRAVERSAL", kind: "inorder" },
@@ -42,8 +45,12 @@ export default function Tutorial() {
   ];
 
   const handleSelectProblem = (traversal) => {
+    const problem = problemSet[traversal];
+
     dispatch(setIsOpen());
+    dispatch(setIsDebugging({ status: false }));
     dispatch(setProblem(traversal));
+    dispatch(setSubmittedCode(problem.template));
   };
 
   return (
