@@ -33,6 +33,22 @@ const problemSet = {
         input: `{
           val: 1,
           left: null,
+          right: null,
+        }`,
+        nativeInput: {
+          val: 1,
+          left: null,
+          right: null,
+        },
+        shortInput: "[1]",
+        answer: "[1]",
+        nativeArrayAnswer: [1],
+        image: false,
+      },
+      {
+        input: `{
+          val: 1,
+          left: null,
           right: {
             val: 2,
             left: {
@@ -43,6 +59,19 @@ const problemSet = {
             right: null,
           },
         }`,
+        nativeInput: {
+          val: 1,
+          left: null,
+          right: {
+            val: 2,
+            left: {
+              val: 3,
+              left: null,
+              right: null,
+            },
+            right: null,
+          },
+        },
         shortInput: "[1, null, 2, 3]",
         answer: "[1, 2, 3]",
         nativeArrayAnswer: [1, 2, 3],
@@ -74,21 +103,35 @@ const problemSet = {
             },
           },
         }`,
+        nativeInput: {
+          val: 1,
+          left: {
+            val: 3,
+            left: {
+              val: 7,
+              left: null,
+              right: null,
+            },
+            right: {
+              val: 9,
+              left: null,
+              right: null,
+            },
+          },
+          right: {
+            val: 5,
+            left: null,
+            right: {
+              val: 13,
+              left: null,
+              right: null,
+            },
+          },
+        },
         shortInput: "[1, 3, 7, 9, 5, null, 13]",
         answer: "[1, 3, 7, 9, 5, 13]",
         nativeArrayAnswer: [1, 3, 7, 9, 5, 13],
         image: true,
-      },
-      {
-        input: `{
-          val: 1,
-          left: null,
-          right: null,
-        }`,
-        shortInput: "[1]",
-        answer: "[1]",
-        nativeArrayAnswer: [1],
-        image: false,
       },
     ],
   },
@@ -111,6 +154,22 @@ const problemSet = {
         input: `{
           val: 1,
           left: null,
+          right: null,
+        }`,
+        nativeInput: {
+          val: 1,
+          left: null,
+          right: null,
+        },
+        shortInput: "[1]",
+        answer: "[1]",
+        nativeArrayAnswer: [1],
+        image: false,
+      },
+      {
+        input: `{
+          val: 1,
+          left: null,
           right: {
             val: 2,
             left: {
@@ -121,6 +180,19 @@ const problemSet = {
             right: null,
           },
         }`,
+        nativeInput: {
+          val: 1,
+          left: null,
+          right: {
+            val: 2,
+            left: {
+              val: 3,
+              left: null,
+              right: null,
+            },
+            right: null,
+          },
+        },
         shortInput: "[1, null, 2, 3]",
         answer: "[1, 3, 2]",
         nativeArrayAnswer: [1, 3, 2],
@@ -152,21 +224,35 @@ const problemSet = {
             },
           },
         }`,
+        nativeInput: {
+          val: 1,
+          left: {
+            val: 3,
+            left: {
+              val: 7,
+              left: null,
+              right: null,
+            },
+            right: {
+              val: 9,
+              left: null,
+              right: null,
+            },
+          },
+          right: {
+            val: 5,
+            left: null,
+            right: {
+              val: 13,
+              left: null,
+              right: null,
+            },
+          },
+        },
         shortInput: "[1, 3, 7, 9, 5, null, 13]",
         answer: "[7, 3, 9, 1, 5, 13]",
         nativeArrayAnswer: [7, 3, 9, 1, 5, 13],
         image: true,
-      },
-      {
-        input: `{
-          val: 1,
-          left: null,
-          right: null,
-        }`,
-        shortInput: "[1]",
-        answer: "[1]",
-        nativeArrayAnswer: [1],
-        image: false,
       },
     ],
   },
@@ -189,6 +275,21 @@ const problemSet = {
         input: `{
           val: 1,
           left: null,
+          right: null,
+        }`,
+        nativeInput: {
+          val: 1,
+          left: null,
+          right: null,
+        },
+        shortInput: "[1]",
+        answer: "[1]",
+        image: false,
+      },
+      {
+        input: `{
+          val: 1,
+          left: null,
           right: {
             val: 2,
             left: {
@@ -199,6 +300,19 @@ const problemSet = {
             right: null,
           },
         }`,
+        nativeInput: {
+          val: 1,
+          left: null,
+          right: {
+            val: 2,
+            left: {
+              val: 3,
+              left: null,
+              right: null,
+            },
+            right: null,
+          },
+        },
         shortInput: "[1, null, 2, 3]",
         answer: "[3, 2, 1]",
         nativeArrayAnswer: [3, 2, 1],
@@ -230,20 +344,35 @@ const problemSet = {
             },
           },
         }`,
+        nativeInput: {
+          val: 1,
+          left: {
+            val: 3,
+            left: {
+              val: 7,
+              left: null,
+              right: null,
+            },
+            right: {
+              val: 9,
+              left: null,
+              right: null,
+            },
+          },
+          right: {
+            val: 5,
+            left: null,
+            right: {
+              val: 13,
+              left: null,
+              right: null,
+            },
+          },
+        },
         shortInput: "[1, 3, 7, 9, 5, null, 13]",
         answer: "[7, 9, 3, 13, 5, 1]",
         nativeArrayAnswer: [7, 9, 3, 13, 5, 1],
         image: true,
-      },
-      {
-        input: `{
-          val: 1,
-          left: null,
-          right: null,
-        }`,
-        shortInput: "[1]",
-        answer: "[1]",
-        image: false,
       },
     ],
   },
@@ -262,6 +391,22 @@ const problemSet = {
     description:
       "Given the root of a binary tree, return the level order traversal of its nodes' values.",
     cases: [
+      {
+        input: `{
+          val: 1,
+          left: null,
+          right: null,
+        }`,
+        nativeInput: {
+          val: 1,
+          left: null,
+          right: null,
+        },
+        shortInput: "[1]",
+        answer: "[1]",
+        nativeArrayAnswer: [1],
+        image: false,
+      },
       {
         input: `{
           val: 3,
@@ -284,6 +429,27 @@ const problemSet = {
             },
           },
         }`,
+        nativeInput: {
+          val: 3,
+          left: {
+            val: 9,
+            left: null,
+            right: null,
+          },
+          right: {
+            val: 20,
+            left: {
+              val: 15,
+              left: null,
+              right: null,
+            },
+            right: {
+              val: 7,
+              left: null,
+              right: null,
+            },
+          },
+        },
         shortInput: "[3, 9, 20, null, null, 15, 7]",
         answer: "[3, 9, 20, 15, 7]",
         nativeArrayAnswer: [3, 9, 20, 15, 7],
@@ -315,21 +481,35 @@ const problemSet = {
             },
           },
         }`,
+        nativeInput: {
+          val: 1,
+          left: {
+            val: 3,
+            left: {
+              val: 7,
+              left: null,
+              right: null,
+            },
+            right: {
+              val: 9,
+              left: null,
+              right: null,
+            },
+          },
+          right: {
+            val: 5,
+            left: null,
+            right: {
+              val: 13,
+              left: null,
+              right: null,
+            },
+          },
+        },
         shortInput: "[1, 3, 7, 9, 5, null, 13]",
         answer: "[1, 3, 5, 7, 9, 13]",
         nativeArrayAnswer: [1, 3, 5, 7, 9, 13],
         image: true,
-      },
-      {
-        input: `{
-          val: 1,
-          left: null,
-          right: null,
-        }`,
-        shortInput: "[1]",
-        answer: "[1]",
-        nativeArrayAnswer: [1],
-        image: false,
       },
     ],
   },

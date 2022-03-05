@@ -36,6 +36,7 @@ const Wrapper = styled.div`
 export default function Correct() {
   const dispatch = useDispatch();
   const userSubmittedCode = useSelector((state) => state.problem.submittedCode);
+
   const handleCloseModal = () => {
     dispatch(setIsOpen());
     dispatch(setSubmittedCode(""));
@@ -49,12 +50,7 @@ export default function Correct() {
       }),
     );
 
-    dispatch(
-      setSubmittedCode(`${userSubmittedCode}
-GRAPH_MASTER(input);
-    `),
-    );
-    // input 값 스코프에 주입
+    dispatch(setSubmittedCode(`${userSubmittedCode}\nGRAPH_MASTER(input);`));
 
     dispatch(setIsOpen());
   };

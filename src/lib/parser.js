@@ -39,6 +39,7 @@ const windowProperties = [
   "this",
   "undefined",
   "undefined",
+  "console",
 ];
 
 function getScopeInformation(state) {

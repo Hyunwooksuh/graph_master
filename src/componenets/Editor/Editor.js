@@ -10,12 +10,16 @@ import "./Editor.css";
 
 import "codemirror/addon/edit/matchbrackets";
 import "codemirror/addon/edit/closebrackets";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { setIsOpen } from "../../redux/slices/modalSlice";
+import { setIsOpen, setObjective } from "../../redux/slices/modalSlice";
 import problemSet from "../../asset/problemSet";
-import answerChecker, { initFunc, EnhancedInterpreter } from "../../lib/enhancedInterpreter";
+import answerChecker, {
+  initFunc,
+  EnhancedInterpreter,
+  getLineAndCharObject,
+} from "../../lib/enhancedInterpreter";
 import { setSubmittedCode } from "../../redux/slices/problemSlice";
 
 window.JSHINT = JSHINT;
@@ -70,9 +74,24 @@ export default function Editor() {
   const { currentProblem, submittedCode } = useSelector((state) => state.problem);
   const { isDebugging } = useSelector((state) => state.debug);
   const problem = problemSet[currentProblem];
+
   const debuggingTarget = new EnhancedInterpreter(submittedCode, initFunc);
+  const objective = useSelector((state) => state.modal.objective);
+
+  const [userCode, setUserCode] = useState("");
   const [prevButtonDisabled, setPrevButtonDisabled] = useState(false);
   const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
+
+  const graphEditor = useRef();
+  const markers = [];
+
+  useEffect(() => {
+    setUserCode(submittedCode);
+  }, [submittedCode]);
+
+  useEffect(() => {
+    dispatch(setSubmittedCode(userCode));
+  }, [userCode]);
 
   useEffect(() => {
     if (problem) {
@@ -81,17 +100,19 @@ export default function Editor() {
   }, [problem]);
 
   const handleClickSubmit = (userCode) => {
-    const result = answerChecker(userCode, currentProblem);
+    const submitResult = answerChecker(userCode, currentProblem);
 
     dispatch(setSubmittedCode(userCode));
 
-    if (result) {
+    if (submitResult.result) {
       if (typeof result === "object") {
-        return dispatch(setIsOpen(result));
+        return dispatch(setIsOpen(submitResult.result));
       }
 
+      dispatch(setObjective(submitResult.case));
       dispatch(setIsOpen("Correct"));
     } else {
+      dispatch(setObjective(submitResult.case));
       dispatch(setIsOpen("Incorrect"));
     }
   };
@@ -99,7 +120,24 @@ export default function Editor() {
   const handleClickPrevStep = () => {};
   const handleClickNextStep = () => {
     const debuggingInfo = debuggingTarget.nextStep();
-    console.log(debuggingInfo.currentState);
+    const offset = getLineAndCharObject(submittedCode, debuggingInfo.range);
+
+    if (debuggingInfo.raw.node.name === "input" && isDebugging) {
+      const pseudoObj = debuggingTarget.nativeToPseudo(objective.nativeInput);
+      debuggingTarget.setValueToScope("input", pseudoObj);
+    }
+
+    if (markers.length) {
+      markers.forEach((marker) => marker.clear());
+    }
+
+    if (offset[0] && offset[1]) {
+      const marker = graphEditor.current.editor.doc.markText(offset[0], offset[1], {
+        css: "background : yellow",
+      });
+
+      markers.push(marker);
+    }
 
     if (!debuggingInfo.hasNextStep) {
       setNextButtonDisabled(true);
@@ -109,11 +147,12 @@ export default function Editor() {
   return (
     <Wrapper>
       <CodeMirror
+        ref={graphEditor}
         className="CodeMirror"
-        value={submittedCode}
+        value={userCode}
         options={options}
         onBeforeChange={(editor, data, value) => {
-          dispatch(setSubmittedCode(value));
+          setUserCode(value);
         }}
       />
       {!isDebugging && currentProblem && (

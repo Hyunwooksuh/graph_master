@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { setIsDebugging } from "../../../redux/slices/debuggingSlice";
-import { setIsOpen } from "../../../redux/slices/modalSlice";
+import { setIsOpen, setObjective } from "../../../redux/slices/modalSlice";
 import { setSubmittedCode, setProblem } from "../../../redux/slices/problemSlice";
 
 const Wrapper = styled.div`
@@ -36,6 +36,7 @@ const Wrapper = styled.div`
 export default function Incorrect() {
   const dispatch = useDispatch();
   const userSubmittedCode = useSelector((state) => state.problem.submittedCode);
+
   const handleCloseModal = () => {
     dispatch(setIsOpen());
     dispatch(setSubmittedCode(""));
@@ -49,13 +50,7 @@ export default function Incorrect() {
       }),
     );
 
-    dispatch(
-      setSubmittedCode(`${userSubmittedCode}
-GRAPH_MASTER(input);
-    `),
-    );
-    // input 값 스코프에 주입
-
+    dispatch(setSubmittedCode(`${userSubmittedCode}\nGRAPH_MASTER(input);`));
     dispatch(setIsOpen());
   };
   return (
