@@ -14,7 +14,7 @@ import Error from "../Modal/Result/Error";
 const PageWrapper = styled.div`
   display: flex;
 
-  padding: 20px;
+  padding: 15px;
   height: 85%;
   width: 100%;
 
@@ -25,16 +25,34 @@ const PageWrapper = styled.div`
   }
 
   .visualizationSection {
-    width: ${(props) => (props.isDebugging ? "55%" : "70%")};
-    margin: 0 2%;
+    width: ${(props) => (props.isDebugging && props.currentScope ? "47%" : "70%")};
+    margin: 0 1%;
     background-color: white;
     border-radius: 20px;
   }
 
   .consoleSection {
-    width: 15%;
+    width: 19%;
     background-color: white;
     border-radius: 20px;
+  }
+
+  .scope-name {
+    margin: 1px;
+  }
+
+  .scope-element {
+    margin: 5px;
+    display: grid;
+  }
+
+  .scope-element-key {
+    color: purple;
+    font-weight: bold;
+  }
+
+  .scope-element-value {
+    font-size: 12px;
   }
 `;
 
@@ -42,17 +60,40 @@ export default function EditPage() {
   const { isOpen, currentModal } = useSelector((state) => state.modal);
   const { isDebugging } = useSelector((state) => state.debug);
   const { currentProblem } = useSelector((state) => state.problem);
-  const scopeInfo = useSelector((state) => state.scope);
+  const { currentScope } = useSelector((state) => state.scope);
 
   return (
     <>
-      <PageWrapper isDebugging={isDebugging}>
+      <PageWrapper isDebugging={isDebugging} currentScope={currentScope}>
         <div className="editorSection">
           <NavBar />
           <Editor />
         </div>
         <div className="visualizationSection">{currentProblem && !isDebugging && <Problem />}</div>
-        {isDebugging && <div className="consoleSection" />}
+        {isDebugging && currentScope && (
+          <div className="consoleSection">
+            <div className="scope-name">
+              <h3>Scope name : {currentScope[0]}</h3>
+            </div>
+            <div>
+              {Object.entries(currentScope[1]).map((element) => {
+                const [key, value] = [element[0], element[1]];
+
+                if (key === "scopeName") {
+                  return;
+                }
+
+                return (
+                  <div className="scope-element">
+                    <div className="scope-element-key">{key}</div>
+                    <div className="scope-element-value">타입: {value.type}</div>
+                    <div className="scope-element-value">값: {value.value}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </PageWrapper>
       <Modal open={isOpen}>
         {currentModal === "Tutorial" && <Tutorial />}

@@ -15,7 +15,7 @@ const ProblemContainer = styled.div`
 
   .description {
     margin-top: 50px;
-    font-size: 20px;
+    font-size: 15px;
     font-weight: bold;
   }
 
@@ -24,11 +24,12 @@ const ProblemContainer = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
+    font-size: 12px;
   }
 
   .unique-test-case {
     display: grid;
-    margin: 50px;
+    margin: 20px;
     flex-basis: 25%;
   }
 `;

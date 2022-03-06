@@ -86,7 +86,7 @@ export class EnhancedInterpreter extends Interpreter {
 
       return {
         currentScope: {
-          scopeName: this.scopeNames[this.scopeNames.length - 2] || null,
+          scopeName: this.scopeNames[this.scopeNames.length - 1] || null,
           ...properties,
         },
         hasNextStep,

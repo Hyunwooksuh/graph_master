@@ -11,11 +11,11 @@ import "codemirror/addon/edit/closebrackets";
 import "./Editor.css";
 
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, batch } from "react-redux";
 import styled from "styled-components";
 import { setIsOpen, setObjective } from "../../redux/slices/modalSlice";
 import { setSubmittedCode } from "../../redux/slices/problemSlice";
-import { setScopeProperties } from "../../redux/slices/scopeSlice";
+import { setScopeProperties, setSerializedText } from "../../redux/slices/scopeSlice";
 import { serialize, deserialize } from "../../lib/serialize";
 import answerChecker, {
   initFunc,
@@ -76,16 +76,15 @@ export default function Editor() {
   const { currentProblem, submittedCode } = useSelector((state) => state.problem);
   const { isDebugging } = useSelector((state) => state.debug);
   const objective = useSelector((state) => state.modal.objective);
+  const { serializedText } = useSelector((state) => state.scope);
 
-  let debuggingTarget = new EnhancedInterpreter(submittedCode, initFunc);
+  const debuggingTarget = new EnhancedInterpreter(submittedCode, initFunc);
 
   const [userCode, setUserCode] = useState("");
   const [prevButtonDisabled, setPrevButtonDisabled] = useState(false);
   const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
 
   const graphEditor = useRef();
-  const markers = [];
-  const prevSerializedText = useRef(null);
 
   useEffect(() => {
     setUserCode(submittedCode);
@@ -101,19 +100,22 @@ export default function Editor() {
         return dispatch(setIsOpen(submitResult.result));
       }
 
-      dispatch(setObjective(submitResult.case));
-      dispatch(setIsOpen("Correct"));
+      batch(() => {
+        dispatch(setObjective(submitResult.case));
+        dispatch(setIsOpen("Correct"));
+      });
     } else {
-      dispatch(setObjective(submitResult.case));
-      dispatch(setIsOpen("Incorrect"));
+      batch(() => {
+        dispatch(setObjective(submitResult.case));
+        dispatch(setIsOpen("Incorrect"));
+      });
     }
   };
 
   const handleClickPrevStep = () => {};
   const handleClickNextStep = () => {
-    if (prevSerializedText.current) {
-      const json = JSON.parse(prevSerializedText.current);
-      debuggingTarget = new EnhancedInterpreter(submittedCode, initFunc);
+    if (serializedText) {
+      const json = JSON.parse(serializedText);
       deserialize(json, debuggingTarget);
     }
 
@@ -126,35 +128,30 @@ export default function Editor() {
       debuggingTarget.setValueToScope("input", pseudoObj);
     }
 
-    if (markers.length) {
-      markers.forEach((marker) => marker.clear());
+    if (graphEditor.current.editor.doc.getAllMarks()) {
+      graphEditor.current.editor.doc.getAllMarks().forEach((marker) => marker.clear());
     }
 
     if (offset[0] && offset[1]) {
-      const marker = graphEditor.current.editor.doc.markText(offset[0], offset[1], {
-        css: "background : yellow",
+      graphEditor.current.editor.doc.markText(offset[0], offset[1], {
+        css: "background : rgba(193, 125, 129, 0.6)",
       });
-      markers.push(marker);
     }
 
     if (!debuggingInfo.hasNextStep) {
       setNextButtonDisabled(true);
     }
 
-    const serializedText = JSON.stringify(serialize(debuggingTarget));
-    console.log("serializedText", serializedText);
-    prevSerializedText.current = serializedText;
-
-    console.log("prevSerializedText", prevSerializedText);
-
-    // window.localStorage.setItem(
-    //   `${stepCount.current}`,
-    //   JSON.stringify({
-    //     offset: offset,
-    //     scope: scopeProperties.scopeName.value,
-    //     properties: scopeProperties,
-    //   }),
-    // );
+    batch(() => {
+      dispatch(setSerializedText(JSON.stringify(serialize(debuggingTarget))));
+      dispatch(
+        setScopeProperties({
+          offset: offset,
+          scope: scopeProperties.scopeName.value,
+          properties: scopeProperties,
+        }),
+      );
+    });
   };
 
   return (
