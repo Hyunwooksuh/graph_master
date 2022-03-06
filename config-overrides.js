@@ -6,6 +6,5 @@ module.exports = function override(config, env) {
     asset: require.resolve("assert"),
     vm: require.resolve("vm-browserify"),
   };
-
   return config;
 };

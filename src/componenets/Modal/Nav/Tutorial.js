@@ -50,7 +50,7 @@ export default function Tutorial() {
     dispatch(setIsOpen());
     dispatch(setIsDebugging({ status: false }));
     dispatch(setProblem(traversal));
-    dispatch(setSubmittedCode(problem.template));
+    dispatch(setSubmittedCode(`${problemSet.baseTemplate}\n${problem.template}`));
   };
 
   return (

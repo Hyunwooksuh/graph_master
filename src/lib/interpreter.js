@@ -19,7 +19,7 @@
  */
 
 /* eslint-disable */
-const acorn = require("acorn");
+const { parse } = require("./acorn");
 
 var Interpreter = function (code, opt_initFunc) {
   if (typeof code === "string") {
@@ -320,7 +320,7 @@ Interpreter.prototype.parse_ = function (code, sourceFile) {
     options[name] = Interpreter.PARSE_OPTIONS[name];
   }
   options["sourceFile"] = sourceFile;
-  return acorn.parse(code, options);
+  return parse(code, options);
 };
 
 /**
@@ -348,26 +348,22 @@ Interpreter.prototype.appendCode = function (code) {
  * Execute one step of the interpreter.
  * @return {boolean} True if a step was executed, false if no more instructions.
  */
-Interpreter.prototype.step = function () {
-  const stack = this.stateStack;
-  const startTime = Date.now();
+ Interpreter.prototype.step = function() {
+  var stack = this.stateStack;
+  var startTime = Date.now();
   do {
-    const state = stack[stack.length - 1];
+    var state = stack[stack.length - 1];
     if (!state) {
       return false;
     }
-    var { node } = state;
-    const type = node["type"];
-    if (type === "Program" && state.done) {
+    var node = state.node, type = node['type'];
+    if (type === 'Program' && state.done) {
       return false;
-    }
-    if (this.paused_) {
+    } else if (this.paused_) {
       return true;
     }
     try {
-      // new Interpreter.State(node["argument"], state.scope);
       var nextState = this.stepFunctions_[type](stack, state, node);
-      
     } catch (e) {
       // Eat any step errors.  They have been thrown on the stack.
       if (e !== Interpreter.STEP_ERROR) {
@@ -380,17 +376,16 @@ Interpreter.prototype.step = function () {
     }
     if (this.getterStep_) {
       // Getter from this step was not handled.
-      throw Error("Getter not supported in this context");
+      throw Error('Getter not supported in this context');
     }
     if (this.setterStep_) {
       // Setter from this step was not handled.
-      throw Error("Setter not supported in this context");
+      throw Error('Setter not supported in this context');
     }
     // This may be polyfill code.  Keep executing until we arrive at user code.
-  } while (!node["end"] && startTime + this["POLYFILL_TIMEOUT"] > Date.now());
+  } while (!node['end'] && startTime + this['POLYFILL_TIMEOUT'] > Date.now());
   return true;
 };
-
 /**
  * Execute the interpreter to program completion.  Vulnerable to infinite loops.
  * @return {boolean} True if a execution is asynchronously blocked,

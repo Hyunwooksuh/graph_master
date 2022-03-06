@@ -1,6 +1,47 @@
 import Interpreter from "./interpreter";
 import problemSet from "../asset/problemSet";
 
+const arrayPrototype = [
+  "at",
+  "concat",
+  "copyWithin",
+  "entries",
+  "every",
+  "fill",
+  "filter",
+  "find",
+  "findIndex",
+  "flat",
+  "flatMap",
+  "forEach",
+  "Array.from",
+  "groupBy",
+  "groupByToMap",
+  "includes",
+  "indexOf",
+  "isArray",
+  "join",
+  "keys",
+  "lastIndexOf",
+  "map",
+  "of",
+  "pop",
+  "push",
+  "reduce",
+  "reduceRight",
+  "reverse",
+  "shift",
+  "slice",
+  "some",
+  "sort",
+  "splice",
+  "toLocaleString",
+  "toSource",
+  "toString",
+  "unshift",
+  "values",
+];
+
 export class EnhancedInterpreter extends Interpreter {
   constructor(code, initFunc) {
     super(code, initFunc);
@@ -35,9 +76,14 @@ export class EnhancedInterpreter extends Interpreter {
       };
     }
 
-    if (currentState.func_ && currentState.doneExec_) {
+    if (
+      currentState.func_ &&
+      !currentState.func_.nativeFunc &&
+      !arrayPrototype.includes(currentState.func_.node.id.name)
+    ) {
       const { name } = currentState.func_.node.id;
       this.scopeNames.push(name);
+
       return {
         currentScope: {
           scopeName: this.scopeNames[this.scopeNames.length - 2] || null,

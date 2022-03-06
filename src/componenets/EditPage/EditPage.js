@@ -42,6 +42,7 @@ export default function EditPage() {
   const { isOpen, currentModal } = useSelector((state) => state.modal);
   const { isDebugging } = useSelector((state) => state.debug);
   const { currentProblem } = useSelector((state) => state.problem);
+  const scopeInfo = useSelector((state) => state.scope);
 
   return (
     <>
