@@ -149,7 +149,7 @@ export default function Editor() {
     });
 
     batch(() => {
-      dispatch(setDidClickPrev());
+      dispatch(setDidClickPrev(true));
       dispatch(decrementStepCount());
       dispatch(setCurrentScope());
     });
@@ -160,20 +160,25 @@ export default function Editor() {
         graphEditor.current.editor.doc.getAllMarks().forEach((marker) => marker.clear());
       }
 
-      const prevOffset = scopeHistory[stepCount + 1].offset;
-      graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
-        css: "background : rgba(193, 125, 129, 0.6)",
-      });
+      if (stepCount === scopeHistory.length - 1) {
+        const prevOffset = scopeHistory[stepCount].offset;
+        graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
+          css: "background : rgba(193, 125, 129, 0.6)",
+        });
 
-      if (stepCount === scopeHistory.length) {
         batch(() => {
           dispatch(setCurrentScope());
-          dispatch(setDidClickPrev());
+          dispatch(setDidClickPrev(false));
         });
         return;
       }
 
-      if (stepCount < scopeHistory.length) {
+      if (stepCount < scopeHistory.length - 1) {
+        const prevOffset = scopeHistory[stepCount + 1].offset;
+        graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
+          css: "background : rgba(193, 125, 129, 0.6)",
+        });
+
         batch(() => {
           dispatch(incrementStepCount());
           dispatch(setCurrentScope());

@@ -32,7 +32,7 @@ const scopeSlices = createSlice({
       state.currentScope = [scopeInfo.scope, scopeInfo.properties];
     },
     setDidClickPrev: (state, action) => {
-      state.didClickPrev = !state.didClickPrev;
+      state.didClickPrev = action.payload;
     },
   },
 });

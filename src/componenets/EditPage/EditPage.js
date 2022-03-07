@@ -61,6 +61,7 @@ export default function EditPage() {
   const { isDebugging } = useSelector((state) => state.debug);
   const { currentProblem } = useSelector((state) => state.problem);
   const { currentScope } = useSelector((state) => state.scope);
+  console.log(currentScope[0], currentScope[1]);
 
   return (
     <>
@@ -72,27 +73,30 @@ export default function EditPage() {
         <div className="visualizationSection">{currentProblem && !isDebugging && <Problem />}</div>
         {isDebugging && currentScope && (
           <div className="consoleSection">
-            <div className="scope-name">
-              <h3>{currentScope.length && currentScope[0]} Scope</h3>
-            </div>
-            <div>
-              {currentScope.length &&
-                Object.entries(currentScope[1]).map((element) => {
-                  const [key, value] = [element[0], element[1]];
+            {currentScope.length > 0 && (
+              <div>
+                <div className="scope-name">
+                  <h3>{currentScope[0]} Scope</h3>
+                </div>
+                <div>
+                  {Object.entries(currentScope[1]).map((element) => {
+                    const [key, value] = [element[0], element[1]];
 
-                  if (key === "scopeName") {
-                    return;
-                  }
+                    if (key === "scopeName") {
+                      return;
+                    }
 
-                  return (
-                    <div className="scope-element" key={key}>
-                      <div className="scope-element-key">{key}</div>
-                      <div className="scope-element-value">타입: {value.type}</div>
-                      <div className="scope-element-value">값: {value.value}</div>
-                    </div>
-                  );
-                })}
-            </div>
+                    return (
+                      <div className="scope-element" key={key}>
+                        <div className="scope-element-key">{key}</div>
+                        <div className="scope-element-value">타입: {value.type}</div>
+                        <div className="scope-element-value">값: {value.value}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </PageWrapper>
