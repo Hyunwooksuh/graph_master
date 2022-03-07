@@ -2,6 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import problemSet from "../../asset/problemSet";
+import transformInput from "../../util/transformInput";
+import TreeChart from "../TreeChart/TreeChart";
 
 const ProblemContainer = styled.div`
   margin: 40px;
@@ -45,12 +47,17 @@ export default function Problem() {
         <div className="description">{description}</div>
         <div className="test-case-container">
           {cases.map((uniqueCase, index) => {
-            const { shortInput, answer } = uniqueCase;
+            const { shortInput, answer, nativeInput } = uniqueCase;
+
+            const data = transformInput(nativeInput);
 
             return (
               <div className="unique-test-case" key={shortInput}>
                 <div>
                   <h2>Example {index + 1}</h2>
+                </div>
+                <div>
+                  <TreeChart data={data} />
                 </div>
                 <div>Input: {shortInput}</div>
                 <div>Output: {answer}</div>
