@@ -73,24 +73,25 @@ export default function EditPage() {
         {isDebugging && currentScope && (
           <div className="consoleSection">
             <div className="scope-name">
-              <h3>Scope name : {currentScope[0]}</h3>
+              <h3>{currentScope.length && currentScope[0]} Scope</h3>
             </div>
             <div>
-              {Object.entries(currentScope[1]).map((element) => {
-                const [key, value] = [element[0], element[1]];
+              {currentScope.length &&
+                Object.entries(currentScope[1]).map((element) => {
+                  const [key, value] = [element[0], element[1]];
 
-                if (key === "scopeName") {
-                  return;
-                }
+                  if (key === "scopeName") {
+                    return;
+                  }
 
-                return (
-                  <div className="scope-element">
-                    <div className="scope-element-key">{key}</div>
-                    <div className="scope-element-value">타입: {value.type}</div>
-                    <div className="scope-element-value">값: {value.value}</div>
-                  </div>
-                );
-              })}
+                  return (
+                    <div className="scope-element" key={key}>
+                      <div className="scope-element-key">{key}</div>
+                      <div className="scope-element-value">타입: {value.type}</div>
+                      <div className="scope-element-value">값: {value.value}</div>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         )}

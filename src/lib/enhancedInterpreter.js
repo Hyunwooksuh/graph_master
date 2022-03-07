@@ -43,10 +43,15 @@ const arrayPrototype = [
 ];
 
 export class EnhancedInterpreter extends Interpreter {
-  constructor(code, initFunc) {
+  constructor(code, initFunc, scopeName) {
     super(code, initFunc);
     this.code = code;
-    this.scopeNames = ["Global"];
+
+    if (!scopeName) {
+      this.scopeNames = ["Global"];
+    } else {
+      this.scopeNames = [scopeName];
+    }
     this.callee = ["window"];
   }
 
@@ -64,6 +69,7 @@ export class EnhancedInterpreter extends Interpreter {
   nextStep() {
     const hasNextStep = this.step();
     const currentState = this.stateStack[this.stateStack.length - 1];
+
     const { start, end } = currentState.node;
     const { properties } = currentState.scope.object;
 

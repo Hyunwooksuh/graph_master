@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "assert": "^2.0.0",
     "codemirror": "^5.65.2",
+    "immer": "^9.0.12",
     "jshint": "^2.13.4",
     "react": "^17.0.2",
     "react-codemirror2": "^7.2.1",

@@ -15,17 +15,34 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: center;
   }
+
+  .debugging-explain {
+    font-weight: bold;
+  }
+
+  .debugging-testcase {
+    background: white;
+    display: grid;
+    align-items: center;
+    padding: 10px;
+    border-radius: 20px;
+  }
 `;
 
 export default function Objective() {
   const objective = useSelector((state) => state.modal.objective);
-  const problem = useSelector((state) => state.problem.currentProblem);
 
   return (
     <Wrapper>
-      <h2 className="objective">디버깅 목표</h2>
-      <div className="debugging-problem" />
-      <div className="debugging-testcase" />
+      <h2 className="objective">디버깅 목표 🧐</h2>
+      <div className="debugging-explain">
+        성공한 경우 마지막 테스트 케이스로 디버깅이 진행되며, 실패한 경우 실패한 테스트 케이스로
+        디버깅이 진행됩니다.
+      </div>
+      <div className="debugging-testcase">
+        <div>INPUT: {objective.shortInput}</div>
+        <div>OUTPUT: {objective.answer}</div>
+      </div>
     </Wrapper>
   );
 }

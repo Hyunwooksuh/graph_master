@@ -15,7 +15,14 @@ import { useDispatch, useSelector, batch } from "react-redux";
 import styled from "styled-components";
 import { setIsOpen, setObjective } from "../../redux/slices/modalSlice";
 import { setSubmittedCode } from "../../redux/slices/problemSlice";
-import { setScopeProperties, setSerializedText } from "../../redux/slices/scopeSlice";
+import {
+  setScopeProperties,
+  setSerializedText,
+  decrementStepCount,
+  incrementStepCount,
+  setCurrentScope,
+  setDidClickPrev,
+} from "../../redux/slices/scopeSlice";
 import { serialize, deserialize } from "../../lib/serialize";
 import answerChecker, {
   initFunc,
@@ -76,12 +83,17 @@ export default function Editor() {
   const { currentProblem, submittedCode } = useSelector((state) => state.problem);
   const { isDebugging } = useSelector((state) => state.debug);
   const objective = useSelector((state) => state.modal.objective);
-  const { serializedText } = useSelector((state) => state.scope);
+  const { serializedText, scopeArray, currentScope, stepCount, scopeHistory, didClickPrev } =
+    useSelector((state) => state.scope);
 
-  const debuggingTarget = new EnhancedInterpreter(submittedCode, initFunc);
+  const debuggingTarget = new EnhancedInterpreter(
+    submittedCode,
+    initFunc,
+    currentScope && currentScope[0],
+  );
 
   const [userCode, setUserCode] = useState("");
-  const [prevButtonDisabled, setPrevButtonDisabled] = useState(false);
+  const [prevButtonDisabled, setPrevButtonDisabled] = useState(true);
   const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
 
   const graphEditor = useRef();
@@ -89,6 +101,16 @@ export default function Editor() {
   useEffect(() => {
     setUserCode(submittedCode);
   }, [submittedCode]);
+
+  useEffect(() => {
+    if (stepCount < 0) {
+      setPrevButtonDisabled(true);
+    }
+
+    if (serializedText) {
+      setPrevButtonDisabled(false);
+    }
+  }, [serializedText]);
 
   const handleClickSubmit = (userCode) => {
     const submitResult = answerChecker(userCode, currentProblem);
@@ -112,10 +134,58 @@ export default function Editor() {
     }
   };
 
-  const handleClickPrevStep = () => {};
+  const handleClickPrevStep = () => {
+    if (stepCount < 0) {
+      return;
+    }
+
+    if (graphEditor.current.editor.doc.getAllMarks()) {
+      graphEditor.current.editor.doc.getAllMarks().forEach((marker) => marker.clear());
+    }
+
+    const prevOffset = scopeHistory[stepCount - 1].offset;
+    graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
+      css: "background : rgba(193, 125, 129, 0.6)",
+    });
+
+    batch(() => {
+      dispatch(setDidClickPrev());
+      dispatch(decrementStepCount());
+      dispatch(setCurrentScope());
+    });
+  };
   const handleClickNextStep = () => {
+    if (didClickPrev) {
+      if (graphEditor.current.editor.doc.getAllMarks()) {
+        graphEditor.current.editor.doc.getAllMarks().forEach((marker) => marker.clear());
+      }
+
+      const prevOffset = scopeHistory[stepCount + 1].offset;
+      graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
+        css: "background : rgba(193, 125, 129, 0.6)",
+      });
+
+      if (stepCount === scopeHistory.length) {
+        batch(() => {
+          dispatch(setCurrentScope());
+          dispatch(setDidClickPrev());
+        });
+        return;
+      }
+
+      if (stepCount < scopeHistory.length) {
+        batch(() => {
+          dispatch(incrementStepCount());
+          dispatch(setCurrentScope());
+        });
+
+        return;
+      }
+    }
+
     if (serializedText) {
       const json = JSON.parse(serializedText);
+
       deserialize(json, debuggingTarget);
     }
 

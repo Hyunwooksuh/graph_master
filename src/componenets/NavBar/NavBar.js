@@ -34,6 +34,10 @@ export default function NavBar() {
           }
 
           if (item.title === "Reset") {
+            if (isDebugging) {
+              return;
+            }
+
             return (
               <div key={index} className={item.cName} onClick={handleClickReset}>
                 {item.title}
@@ -48,7 +52,6 @@ export default function NavBar() {
           );
         })}
       </div>
-      {/* <div className="task-tooltip"> 새발자는 오늘도 뚠뚠.. 모두들 화이팅입니다. </div> */}
     </div>
   );
 }

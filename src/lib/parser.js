@@ -91,8 +91,8 @@ export default function getScopeInformation(scope) {
               obj += ` ${propertyKey}: ${arrayToString(propertyValue)}, `;
             } else {
               const propertiesValue = NativeNestedObjectToPseudoObject(propertyValue);
-              if (!propertiesValue.length) {
-                obj += ` ${propertyKey}: ${NativeNestedObjectToPseudoObject(propertyValue)}`;
+              if (propertiesValue.length) {
+                obj += ` ${propertyKey}: ${propertiesValue}`;
               } else {
                 obj += ` ${propertyKey}: null`;
               }
