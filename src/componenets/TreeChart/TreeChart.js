@@ -1,6 +1,7 @@
 /* eslint-disable react/no-this-in-sfc */
 import React, { useRef, useEffect } from "react";
 import { select, hierarchy, tree, linkVertical } from "d3";
+import { useSelector } from "react-redux";
 import useResizeObserver from "../../util/useResizeObserver";
 
 function usePrevious(value) {
@@ -13,7 +14,8 @@ function usePrevious(value) {
   return ref.current;
 }
 
-function TreeChart({ data, isDebugging }) {
+function TreeChart({ data }) {
+  const { isDebugging, nodeHistory, currentNodeCount } = useSelector((state) => state.debug);
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
@@ -128,7 +130,7 @@ function TreeChart({ data, isDebugging }) {
         .attr("opacity", 1)
         .attr("fill", "black");
     }
-  }, [data, dimensions, previouslyRenderedData]);
+  }, [data, dimensions, previouslyRenderedData, isDebugging]);
 
   return (
     <div ref={wrapperRef} style={{ height: "100%", width: "100%" }}>

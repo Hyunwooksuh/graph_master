@@ -72,6 +72,7 @@ export class EnhancedInterpreter extends Interpreter {
 
     const { start, end } = currentState.node;
     const { properties } = currentState.scope.object;
+    const observingOutput = findOutputObj(currentState);
 
     if (currentState.node.type === "Program" && currentState.done) {
       return {
@@ -79,6 +80,7 @@ export class EnhancedInterpreter extends Interpreter {
         type: "End",
         range: [start, end],
         raw: currentState,
+        observingOutput,
       };
     }
 
@@ -99,6 +101,7 @@ export class EnhancedInterpreter extends Interpreter {
         type: currentState.node.type,
         range: [start, end],
         raw: currentState,
+        observingOutput,
       };
     }
 
@@ -116,9 +119,56 @@ export class EnhancedInterpreter extends Interpreter {
       type: currentState.node.type,
       range: [start, end],
       raw: currentState,
+      observingOutput,
     };
   }
 }
+
+/*
+  [순회 참고사항]
+  parentscope -> object, parentScope 
+  object -> properties
+*/
+const findOutputObj = function (state) {
+  let result = null;
+  getOutputObj(state);
+
+  return result;
+
+  function getOutputObj(state, dep = 0) {
+    if (!state) {
+      return;
+    }
+
+    let targetScope = null;
+    if (dep === 0) {
+      targetScope = state.scope;
+    } else {
+      targetScope = state;
+    }
+
+    const keys = Object.keys(targetScope);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+
+      if (key === "object") {
+        const targetProperties = targetScope[key].properties;
+        const scopeElements = Object.keys(targetProperties);
+
+        for (let i = 0; i < scopeElements.length; i++) {
+          if (scopeElements[i] === "output") {
+            result = targetProperties[scopeElements[i]];
+            return;
+          }
+        }
+      }
+
+      if (key === "parentScope") {
+        getOutputObj(targetScope[key], dep + 1);
+      }
+    }
+  }
+};
 
 export const initFunc = function (interpreter, globalObject) {
   const pseudoConsole = interpreter.nativeToPseudo({});

@@ -197,6 +197,12 @@ export default function Editor() {
     const debuggingInfo = debuggingTarget.nextStep();
     const offset = getLineAndCharObject(submittedCode, debuggingInfo.range);
     const scopeProperties = getScopeInformation(debuggingInfo.currentScope);
+    const currentOutputState = debuggingInfo.observingOutput;
+
+    let properties = null;
+    if (currentOutputState) {
+      properties = currentOutputState.properties;
+    }
 
     if (debuggingInfo.raw.node.name === "input" && isDebugging) {
       const pseudoObj = debuggingTarget.nativeToPseudo(objective.nativeInput);

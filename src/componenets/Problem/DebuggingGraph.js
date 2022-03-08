@@ -13,15 +13,14 @@ const ChartWrapper = styled.div`
 export default function DebuggingGraph() {
   const { nativeInput } = useSelector((state) => state.modal.objective);
   const { currentProblem } = useSelector((state) => state.problem);
-  const { isDebugging, nodeHistory, currentNodeCount } = useSelector((state) => state.debug);
+  const { isDebugging } = useSelector((state) => state.debug);
 
   const data = transformInput(nativeInput, isDebugging);
   const traversedData = traversal(data, currentProblem);
-  console.log(traversedData);
 
   return (
     <ChartWrapper>
-      <TreeChart data={traversedData} isDebugging={isDebugging} />
+      <TreeChart data={traversedData} />
     </ChartWrapper>
   );
 }
