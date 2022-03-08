@@ -15,7 +15,7 @@ function usePrevious(value) {
 }
 
 function TreeChart({ data }) {
-  const { isDebugging, nodeHistory, currentNodeCount } = useSelector((state) => state.debug);
+  const { isDebugging } = useSelector((state) => state.debug);
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);

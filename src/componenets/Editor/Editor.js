@@ -199,9 +199,13 @@ export default function Editor() {
     const scopeProperties = getScopeInformation(debuggingInfo.currentScope);
     const currentOutputState = debuggingInfo.observingOutput;
 
-    let properties = null;
+    let currentOutputProperties = null;
     if (currentOutputState) {
-      properties = currentOutputState.properties;
+      currentOutputProperties = currentOutputState.properties;
+    }
+
+    if (typeof currentOutputState === "string") {
+      currentOutputProperties = currentOutputState;
     }
 
     if (debuggingInfo.raw.node.name === "input" && isDebugging) {
@@ -230,6 +234,7 @@ export default function Editor() {
           offset: offset,
           scope: scopeProperties.scopeName.value,
           properties: scopeProperties,
+          output: currentOutputProperties,
         }),
       );
     });

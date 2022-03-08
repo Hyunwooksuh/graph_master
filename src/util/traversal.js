@@ -7,8 +7,10 @@ export default function traversal(data, type) {
           return;
         }
 
-        node.priority = order;
-        order += 1;
+        if (!node.isNull) {
+          node.priority = order;
+          order += 1;
+        }
 
         if (node.children) {
           for (let i = 0; i < node.children.length; i++) {
@@ -31,8 +33,11 @@ export default function traversal(data, type) {
         if (node.children && node.children[0]) {
           inorderTraversal(node.children[0]);
         }
-        node.priority = order;
-        order += 1;
+
+        if (!node.isNull) {
+          node.priority = order;
+          order += 1;
+        }
 
         if (node.children && node.children[1]) {
           inorderTraversal(node.children[1]);
@@ -56,8 +61,10 @@ export default function traversal(data, type) {
           }
         }
 
-        node.priority = order;
-        order += 1;
+        if (!node.isNull) {
+          node.priority = order;
+          order += 1;
+        }
       };
 
       postorderTraversal(data);
@@ -76,8 +83,10 @@ export default function traversal(data, type) {
           for (let i = 0; i < size; i++) {
             const node = queue.shift();
 
-            node.priority = order;
-            order += 1;
+            if (!node.isNull) {
+              node.priority = order;
+              order += 1;
+            }
 
             if (node.children && node.children[0]) {
               queue.push(node.children[0]);

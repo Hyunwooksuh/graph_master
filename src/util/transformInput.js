@@ -99,6 +99,8 @@ function setEmptyValue(data) {
 
   if (data.name) {
     data.name = null;
+  } else if (!data.name) {
+    data.isNull = "null";
   }
 
   if (data.children && data.children[0]) {

@@ -5,8 +5,10 @@ const scopeSlices = createSlice({
   name: "scope",
   initialState: {
     currentScope: [],
+    currentOutput: null,
     scopeArray: [],
     scopeHistory: [],
+    outputHistory: [],
     serializedText: null,
     stepCount: -1,
     didClickPrev: false,
@@ -16,6 +18,13 @@ const scopeSlices = createSlice({
       state.scopeHistory.push(action.payload);
       state.scopeArray.push(action.payload.scope);
       state.currentScope = [action.payload.scope, action.payload.properties];
+
+      if (action.payload.output === "BlockStatement" && state.stepCount >= 0) {
+        state.outputHistory.push(state.outputHistory[state.outputHistory.length - 1]);
+      } else {
+        state.currentOutput = action.payload.output;
+        state.outputHistory.push(state.currentOutput);
+      }
     },
     setSerializedText: (state, action) => {
       state.serializedText = action.payload;
