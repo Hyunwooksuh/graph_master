@@ -10,6 +10,7 @@ import Tutorial from "../Modal/Nav/Tutorial";
 import Correct from "../Modal/Result/Correct";
 import Incorrect from "../Modal/Result/Incorrect";
 import Error from "../Modal/Result/Error";
+import DebuggingGraph from "../Problem/DebuggingGraph";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -27,13 +28,13 @@ const PageWrapper = styled.div`
   .visualizationSection {
     width: ${(props) => (props.isDebugging && props.currentScope ? "47%" : "70%")};
     margin: 0 1%;
-    background-color: white;
+    background-color: floralwhite;
     border-radius: 20px;
   }
 
   .consoleSection {
     width: 19%;
-    background-color: white;
+    background-color: floralwhite;
     border-radius: 20px;
   }
 
@@ -61,7 +62,6 @@ export default function EditPage() {
   const { isDebugging } = useSelector((state) => state.debug);
   const { currentProblem } = useSelector((state) => state.problem);
   const { currentScope } = useSelector((state) => state.scope);
-  console.log(currentScope[0], currentScope[1]);
 
   return (
     <>
@@ -70,7 +70,10 @@ export default function EditPage() {
           <NavBar />
           <Editor />
         </div>
-        <div className="visualizationSection">{currentProblem && !isDebugging && <Problem />}</div>
+        <div className="visualizationSection">
+          {currentProblem && !isDebugging && <Problem />}
+          {currentProblem && isDebugging && <DebuggingGraph />}
+        </div>
         {isDebugging && currentScope && (
           <div className="consoleSection">
             {currentScope.length > 0 && (

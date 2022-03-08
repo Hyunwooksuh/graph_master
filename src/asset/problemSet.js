@@ -32,54 +32,6 @@ const problemSet = {
       {
         input: `{
           val: 1,
-          left: null,
-          right: null,
-        }`,
-        nativeInput: {
-          val: 1,
-          left: null,
-          right: null,
-        },
-        shortInput: "[1]",
-        answer: "[1]",
-        nativeArrayAnswer: [1],
-        image: false,
-      },
-      {
-        input: `{
-          val: 1,
-          left: null,
-          right: {
-            val: 2,
-            left: {
-              val: 3,
-              left: null,
-              right: null,
-            },
-            right: null,
-          },
-        }`,
-        nativeInput: {
-          val: 1,
-          left: null,
-          right: {
-            val: 2,
-            left: {
-              val: 3,
-              left: null,
-              right: null,
-            },
-            right: null,
-          },
-        },
-        shortInput: "[1, null, 2, 3]",
-        answer: "[1, 2, 3]",
-        nativeArrayAnswer: [1, 2, 3],
-        image: true,
-      },
-      {
-        input: `{
-          val: 1,
           left: {
             val: 3,
             left: {
@@ -131,6 +83,54 @@ const problemSet = {
         shortInput: "[1, 3, 7, 9, 5, null, 13]",
         answer: "[1, 3, 7, 9, 5, 13]",
         nativeArrayAnswer: [1, 3, 7, 9, 5, 13],
+        image: true,
+      },
+      {
+        input: `{
+          val: 1,
+          left: null,
+          right: null,
+        }`,
+        nativeInput: {
+          val: 1,
+          left: null,
+          right: null,
+        },
+        shortInput: "[1]",
+        answer: "[1]",
+        nativeArrayAnswer: [1],
+        image: false,
+      },
+      {
+        input: `{
+          val: 1,
+          left: null,
+          right: {
+            val: 2,
+            left: {
+              val: 3,
+              left: null,
+              right: null,
+            },
+            right: null,
+          },
+        }`,
+        nativeInput: {
+          val: 1,
+          left: null,
+          right: {
+            val: 2,
+            left: {
+              val: 3,
+              left: null,
+              right: null,
+            },
+            right: null,
+          },
+        },
+        shortInput: "[1, null, 2, 3]",
+        answer: "[1, 2, 3]",
+        nativeArrayAnswer: [1, 2, 3],
         image: true,
       },
     ],

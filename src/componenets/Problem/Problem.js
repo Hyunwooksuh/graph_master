@@ -7,7 +7,9 @@ import TreeChart from "../TreeChart/TreeChart";
 
 const ProblemContainer = styled.div`
   margin: 40px;
-  height: 100%;
+  height: 95%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 9fr;
 
   .problem-title {
     text-decoration: none;
@@ -16,7 +18,6 @@ const ProblemContainer = styled.div`
   }
 
   .description {
-    margin-top: 50px;
     font-size: 15px;
     font-weight: bold;
   }
@@ -24,21 +25,36 @@ const ProblemContainer = styled.div`
   .test-case-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-around;
     width: 100%;
     font-size: 12px;
   }
 
   .unique-test-case {
     display: grid;
-    margin: 20px;
-    flex-basis: 25%;
+    width: 50%;
+    grid-template-rows: 0.3fr 6fr 1fr;
+  }
+
+  .case-number {
+    display: flex;
+    justify-content: center;
+    height: 80%;
+  }
+
+  .input-output {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
   }
 `;
 
 export default function Problem() {
   const { currentProblem } = useSelector((state) => state.problem);
   const { title, description, cases } = problemSet[currentProblem];
+  const { isDebugging } = useSelector((state) => state.debug);
 
   return (
     currentProblem && (
@@ -47,20 +63,25 @@ export default function Problem() {
         <div className="description">{description}</div>
         <div className="test-case-container">
           {cases.map((uniqueCase, index) => {
+            if (index === 0) {
+              return;
+            }
             const { shortInput, answer, nativeInput } = uniqueCase;
 
-            const data = transformInput(nativeInput);
+            const data = transformInput(nativeInput, isDebugging);
 
             return (
               <div className="unique-test-case" key={shortInput}>
-                <div>
-                  <h2>Example {index + 1}</h2>
+                <div className="case-number">
+                  <h2>Example {index}</h2>
                 </div>
-                <div>
+                <div className="tree-chart">
                   <TreeChart data={data} />
                 </div>
-                <div>Input: {shortInput}</div>
-                <div>Output: {answer}</div>
+                <div className="input-output">
+                  <div>Input: {shortInput}</div>
+                  <div>Output: {answer}</div>
+                </div>
               </div>
             );
           })}

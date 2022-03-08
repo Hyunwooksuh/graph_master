@@ -3,7 +3,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: cornflowerblue;
+  background: darkslategray;
+  border-radius: 10px;
 }
 
 .nav-text {
@@ -14,7 +15,7 @@
   font-size: 15px;
   font-weight: bolder;
   width: 100%;
-  background-color: rgb(143, 204, 143);
+  background-color: silver;
   margin: 10px;
   border-radius: 20px;
 }
