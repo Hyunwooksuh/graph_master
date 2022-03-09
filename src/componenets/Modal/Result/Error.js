@@ -5,6 +5,7 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   display: grid;
   height: 100%;
+  grid-template-rows: 3fr 4fr 1fr;
 
   .error-result {
     display: flex;
@@ -14,13 +15,16 @@ const Wrapper = styled.div`
   .error-modal-description {
     display: flex;
     justify-content: center;
+    align-items: center;
     font-size: 14px;
     background: white;
     color: red;
+    border-radius: 40px;
+    padding: 18px;
   }
 
   .error-modal-button {
-    margin: 10px;
+    margin: 20px;
     border-radius: 20px;
     font-size: 17px;
     font-weight: bold;
@@ -29,13 +33,12 @@ const Wrapper = styled.div`
 `;
 
 export default function Error() {
-  const currentError = useSelector((state) => state.modal.currentModal);
+  const { error } = useSelector((state) => state.modal);
 
   return (
     <Wrapper>
-      <h2 className="error-result">에러 발생 !</h2>
-      <div className="error-modal-description">{currentError.error}</div>
-      <button className="error-modal-button">문제 다시 도전하기</button>
+      <h2 className="error-result">😬 에러 발생 ! 😬</h2>
+      <div className="error-modal-description">{error}</div>
     </Wrapper>
   );
 }

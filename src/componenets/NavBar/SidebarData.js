@@ -8,7 +8,7 @@ const SidebarData = [
     cName: "nav-text",
   },
   {
-    title: "Reset",
+    title: "Help",
     cName: "nav-text",
   },
 ];

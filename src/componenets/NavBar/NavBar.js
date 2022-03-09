@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { batch, useDispatch, useSelector } from "react-redux";
 import React from "react";
 import SidebarData from "./SidebarData";
 import { setIsOpen } from "../../redux/slices/modalSlice";
@@ -20,9 +20,8 @@ export default function NavBar() {
     dispatch(setIsOpen(title));
   };
 
-  const handleClickReset = () => {
-    dispatch(setProblem(null));
-    dispatch(setSubmittedCode(problem.template));
+  const handleClickHelp = (title) => {
+    dispatch(setIsOpen(title));
   };
 
   return (
@@ -33,13 +32,17 @@ export default function NavBar() {
             return;
           }
 
-          if (item.title === "Reset") {
+          if (item.title === "Help") {
             if (isDebugging) {
               return;
             }
 
             return (
-              <div key={index} className={item.cName} onClick={handleClickReset}>
+              <div
+                key={index}
+                className={item.cName}
+                onClick={handleClickHelp.bind(null, item.title)}
+              >
                 {item.title}
               </div>
             );

@@ -188,14 +188,12 @@ export const initFunc = function (interpreter, globalObject) {
 };
 
 export default function answerChecker(code, type) {
-  // 커스텀 파서 구현 이후, syntax 에러 핸들링 추가
   const testCases = problemSet[type].cases;
 
   for (let i = 0; i < testCases.length; i++) {
     const { input } = testCases[i];
     const fullCode = `${code}
-  const input = ${input}
-  GRAPH_MASTER(input);`;
+  GRAPH_MASTER(${input});`;
 
     const checker = new EnhancedInterpreter(fullCode, initFunc);
     const isError = checker.runSubmittedCode();

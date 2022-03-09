@@ -6,6 +6,7 @@ const modalSlices = createSlice({
     isOpen: false,
     currentModal: null,
     objective: null,
+    error: null,
   },
   reducers: {
     setIsOpen: (state, action) => {
@@ -15,8 +16,11 @@ const modalSlices = createSlice({
     setObjective: (state, action) => {
       state.objective = action.payload;
     },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
   },
 });
 
-export const { setIsOpen, setObjective } = modalSlices.actions;
+export const { setIsOpen, setObjective, setError } = modalSlices.actions;
 export default modalSlices.reducer;

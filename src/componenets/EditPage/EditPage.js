@@ -10,6 +10,7 @@ import Tutorial from "../Modal/Nav/Tutorial";
 import Correct from "../Modal/Result/Correct";
 import Incorrect from "../Modal/Result/Incorrect";
 import Error from "../Modal/Result/Error";
+import Help from "../Modal/Nav/Help";
 import DebuggingGraph from "../Problem/DebuggingGraph";
 
 const PageWrapper = styled.div`
@@ -20,13 +21,13 @@ const PageWrapper = styled.div`
   width: 100%;
 
   .editorSection {
-    width: 30%;
+    width: 35%;
     display: grid;
     grid-template-rows: 1fr 11fr;
   }
 
   .visualizationSection {
-    width: ${(props) => (props.isDebugging && props.currentScope ? "47%" : "70%")};
+    width: ${(props) => (props.isDebugging && props.currentScope ? "47%" : "65%")};
     margin: 0 1%;
     background-color: floralwhite;
     border-radius: 20px;
@@ -108,7 +109,8 @@ export default function EditPage() {
         {currentModal === "Objective" && <Objective />}
         {currentModal === "Correct" && <Correct />}
         {currentModal === "Incorrect" && <Incorrect />}
-        {typeof currentModal === "object" && <Error />}
+        {currentModal === "Error" && <Error />}
+        {currentModal === "Help" && <Help />}
       </Modal>
     </>
   );

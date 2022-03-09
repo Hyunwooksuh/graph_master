@@ -13,7 +13,7 @@ import "./Editor.css";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector, batch } from "react-redux";
 import styled from "styled-components";
-import { setIsOpen, setObjective } from "../../redux/slices/modalSlice";
+import { setError, setIsOpen, setObjective } from "../../redux/slices/modalSlice";
 import { setSubmittedCode } from "../../redux/slices/problemSlice";
 import {
   setScopeProperties,
@@ -84,8 +84,9 @@ export default function Editor() {
   const { currentProblem, submittedCode } = useSelector((state) => state.problem);
   const { isDebugging } = useSelector((state) => state.debug);
   const objective = useSelector((state) => state.modal.objective);
-  const { serializedText, scopeArray, currentScope, stepCount, scopeHistory, didClickPrev } =
-    useSelector((state) => state.scope);
+  const { serializedText, currentScope, stepCount, scopeHistory, didClickPrev } = useSelector(
+    (state) => state.scope,
+  );
 
   const debuggingTarget = new EnhancedInterpreter(
     submittedCode,
@@ -118,11 +119,16 @@ export default function Editor() {
 
     dispatch(setSubmittedCode(userCode));
 
-    if (submitResult.result) {
-      if (typeof result === "object") {
-        return dispatch(setIsOpen(submitResult.result));
-      }
+    if (submitResult.error) {
+      batch(() => {
+        dispatch(setIsOpen("Error"));
+        dispatch(setError(submitResult.error));
+      });
 
+      return;
+    }
+
+    if (submitResult.result) {
       batch(() => {
         dispatch(setObjective(submitResult.case));
         dispatch(setIsOpen("Correct"));
@@ -264,7 +270,7 @@ export default function Editor() {
           setUserCode(value);
         }}
       />
-      {!isDebugging && currentProblem && (
+      {!isDebugging && (
         <div className="submit-button-container">
           <button className="submit-button" onClick={handleClickSubmit.bind(this, userCode)}>
             ⏩ SUBMIT CODE
@@ -292,20 +298,3 @@ export default function Editor() {
     </Wrapper>
   );
 }
-
-// function GRAPH_MASTER(input) {
-//   const output = [];
-//   function preorderTraversal(node) {
-//     // your code
-//     if (!node) {
-//       return;
-//     }
-
-//     output.push(node.val);
-//     preorderTraversal(node.left);
-//     preorderTraversal(node.right);
-//   }
-
-//   preorderTraversal(input);
-//   return output;
-// }
