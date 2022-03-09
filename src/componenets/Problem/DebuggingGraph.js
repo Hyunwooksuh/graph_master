@@ -19,7 +19,6 @@ export default function DebuggingGraph() {
   const data = transformInput(nativeInput, isDebugging);
   const traversedData = traversal(data, currentProblem);
   applyOutput(traversedData, currentOutput);
-  console.log(traversedData);
 
   return (
     <ChartWrapper>
