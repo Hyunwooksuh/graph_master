@@ -22,6 +22,7 @@ import {
   incrementStepCount,
   setCurrentScope,
   setDidClickPrev,
+  setCurrentOutput,
 } from "../../redux/slices/scopeSlice";
 import { serialize, deserialize } from "../../lib/serialize";
 import answerChecker, {
@@ -144,14 +145,18 @@ export default function Editor() {
     }
 
     const prevOffset = scopeHistory[stepCount - 1].offset;
-    graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
-      css: "background : rgba(193, 125, 129, 0.6)",
-    });
+
+    if (prevOffset[0] && prevOffset[1]) {
+      graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
+        css: "background : rgba(193, 125, 129, 0.6)",
+      });
+    }
 
     batch(() => {
       dispatch(setDidClickPrev(true));
       dispatch(decrementStepCount());
       dispatch(setCurrentScope());
+      dispatch(setCurrentOutput());
     });
   };
   const handleClickNextStep = () => {
@@ -162,12 +167,16 @@ export default function Editor() {
 
       if (stepCount === scopeHistory.length - 1) {
         const prevOffset = scopeHistory[stepCount].offset;
-        graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
-          css: "background : rgba(193, 125, 129, 0.6)",
-        });
+
+        if (prevOffset[0] && prevOffset[1]) {
+          graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
+            css: "background : rgba(193, 125, 129, 0.6)",
+          });
+        }
 
         batch(() => {
           dispatch(setCurrentScope());
+          dispatch(setCurrentOutput());
           dispatch(setDidClickPrev(false));
         });
         return;
@@ -175,13 +184,17 @@ export default function Editor() {
 
       if (stepCount < scopeHistory.length - 1) {
         const prevOffset = scopeHistory[stepCount + 1].offset;
-        graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
-          css: "background : rgba(193, 125, 129, 0.6)",
-        });
+
+        if (prevOffset[0] && prevOffset[1]) {
+          graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
+            css: "background : rgba(193, 125, 129, 0.6)",
+          });
+        }
 
         batch(() => {
           dispatch(incrementStepCount());
           dispatch(setCurrentScope());
+          dispatch(setCurrentOutput());
         });
 
         return;

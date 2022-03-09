@@ -72,6 +72,7 @@ export class EnhancedInterpreter extends Interpreter {
 
     const { start, end } = currentState.node;
     const { properties } = currentState.scope.object;
+
     let observingOutput = findOutputObj(currentState);
 
     if (!observingOutput && currentState.node.type === "BlockStatement") {

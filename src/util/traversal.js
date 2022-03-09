@@ -10,6 +10,8 @@ export default function traversal(data, type) {
         if (!node.isNull) {
           node.priority = order;
           order += 1;
+        } else if (node.isNull) {
+          node.name = "null";
         }
 
         if (node.children) {

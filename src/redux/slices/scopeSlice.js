@@ -36,6 +36,13 @@ const scopeSlices = createSlice({
     incrementStepCount: (state, action) => {
       state.stepCount += 1;
     },
+    setCurrentOutput: (state, action) => {
+      if (!state.outputHistory[state.stepCount]) {
+        state.currentOutput = null;
+      } else {
+        state.currentOutput = original(state.outputHistory[state.stepCount]);
+      }
+    },
     setCurrentScope: (state, action) => {
       const scopeInfo = original(state.scopeHistory[state.stepCount]);
       state.currentScope = [scopeInfo.scope, scopeInfo.properties];
@@ -53,5 +60,6 @@ export const {
   incrementStepCount,
   setCurrentScope,
   setDidClickPrev,
+  setCurrentOutput,
 } = scopeSlices.actions;
 export default scopeSlices.reducer;
