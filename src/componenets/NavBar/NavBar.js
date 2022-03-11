@@ -3,13 +3,9 @@ import React from "react";
 import SidebarData from "./SidebarData";
 import { setIsOpen } from "../../redux/slices/modalSlice";
 import "./NavBar.css";
-import { setProblem, setSubmittedCode } from "../../redux/slices/problemSlice";
-import problemSet from "../../asset/problemSet";
 
 export default function NavBar() {
   const dispatch = useDispatch();
-  const { currentProblem } = useSelector((state) => state.problem);
-  const problem = problemSet[currentProblem];
 
   const { isDebugging } = useSelector((state) => state.debug);
   const handleClickMenu = (title) => {

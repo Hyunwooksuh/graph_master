@@ -4,6 +4,7 @@ import styled from "styled-components";
 import problemSet from "../../asset/problemSet";
 import transformInput from "../../util/transformInput";
 import TreeChart from "../TreeChart/TreeChart";
+import PathFind from "../Pathfind/Pathfind";
 
 const ProblemContainer = styled.div`
   margin: 40px;
@@ -61,31 +62,34 @@ export default function Problem() {
       <ProblemContainer>
         <h1 className="problem-title">{title}</h1>
         <div className="description">{description}</div>
-        <div className="test-case-container">
-          {cases.map((uniqueCase, index) => {
-            if (index === 0) {
-              return;
-            }
-            const { shortInput, answer, nativeInput } = uniqueCase;
+        {cases && (
+          <div className="test-case-container">
+            {cases.map((uniqueCase, index) => {
+              if (index === 0) {
+                return;
+              }
+              const { shortInput, answer, nativeInput } = uniqueCase;
 
-            const data = transformInput(nativeInput, isDebugging);
+              const data = transformInput(nativeInput, isDebugging);
 
-            return (
-              <div className="unique-test-case" key={shortInput}>
-                <div className="case-number">
-                  <h2>Example {index}</h2>
+              return (
+                <div className="unique-test-case" key={shortInput}>
+                  <div className="case-number">
+                    <h2>Example {index}</h2>
+                  </div>
+                  <div className="tree-chart">
+                    <TreeChart data={data} />
+                  </div>
+                  <div className="input-output">
+                    <div>Input: {shortInput}</div>
+                    <div>Output: {answer}</div>
+                  </div>
                 </div>
-                <div className="tree-chart">
-                  <TreeChart data={data} />
-                </div>
-                <div className="input-output">
-                  <div>Input: {shortInput}</div>
-                  <div>Output: {answer}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
+        {!cases && <PathFind />}
       </ProblemContainer>
     )
   );

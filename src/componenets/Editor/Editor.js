@@ -102,17 +102,17 @@ export default function Editor() {
 
   useEffect(() => {
     setUserCode(submittedCode);
-  }, [submittedCode]);
+  }, [stepCount, submittedCode]);
 
   useEffect(() => {
     if (stepCount < 0) {
       setPrevButtonDisabled(true);
-    }
-
-    if (serializedText) {
+      setNextButtonDisabled(false);
+    } else {
       setPrevButtonDisabled(false);
+      setNextButtonDisabled(false);
     }
-  }, [serializedText]);
+  }, [stepCount]);
 
   const handleClickSubmit = (userCode) => {
     const submitResult = answerChecker(userCode, currentProblem);
@@ -142,17 +142,16 @@ export default function Editor() {
   };
 
   const handleClickPrevStep = () => {
-    if (stepCount < 0) {
-      return;
-    }
-
     if (graphEditor.current.editor.doc.getAllMarks()) {
       graphEditor.current.editor.doc.getAllMarks().forEach((marker) => marker.clear());
     }
 
-    const prevOffset = scopeHistory[stepCount - 1].offset;
+    let prevOffset = null;
+    if (scopeHistory[stepCount - 1]) {
+      prevOffset = scopeHistory[stepCount - 1].offset;
+    }
 
-    if (prevOffset[0] && prevOffset[1]) {
+    if (prevOffset && prevOffset.length === 2) {
       graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
         css: "background : rgba(193, 125, 129, 0.6)",
       });
@@ -242,8 +241,9 @@ export default function Editor() {
       });
     }
 
-    if (!debuggingInfo.hasNextStep) {
+    if (debuggingInfo.raw.node.type === "Program" && debuggingInfo.raw.node.body.length === 0) {
       setNextButtonDisabled(true);
+      return;
     }
 
     batch(() => {

@@ -513,6 +513,45 @@ const problemSet = {
       },
     ],
   },
+  shortestPath: {
+    baseTemplate: `
+    class Spot {
+      constructor(row, column) {
+        this.x = row;
+        this.y = column;
+        this.isStart = this.x === NODE_START_ROW && this.y === NODE_START_COL;
+        this.isEnd = this.x === NODE_END_ROW && this.y === NODE_END_COL;
+        this.g = 0;
+        this.f = 0;
+        this.h = 0;
+        this.neighbors = [];
+        this.previous = null;
+      }
+    
+      addNeighbors(grid, rows, columns) {
+        const i = this.x;
+        const j = this.y;
+    
+        if (i > 0) this.neighbors.push(grid[i - 1][j]);
+        if (i < rows - 1) this.neighbors.push(grid[i + 1][j]);
+        if (j > 0) this.neighbors.push(grid[i][j - 1]);
+        if (j < columns - 1) this.neighbors.push(grid[i][j + 1]);
+      }
+    }`,
+    template: `function GRAPH_MASTER() {
+  // push the elements of shortest path
+  const output = [];
+  function pathFinder() {
+    // your code
+  
+  }
+  
+  pathFinder();
+  return output; 
+};`,
+    title: "A Star algorithm",
+    description: "Implement A* algorithm to find the shortest path from green node to red node",
+  },
 };
 
 export default problemSet;
