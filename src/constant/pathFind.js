@@ -1,5 +1,5 @@
-export const COLUMNS = 15;
-export const ROWS = 10;
+export const COLUMNS = 5;
+export const ROWS = 4;
 
 export const NODE_START_ROW = 0;
 export const NODE_START_COL = 0;

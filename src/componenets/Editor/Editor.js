@@ -25,7 +25,8 @@ import {
   setCurrentOutput,
 } from "../../redux/slices/scopeSlice";
 import { serialize, deserialize } from "../../lib/serialize";
-import answerChecker, {
+import treeAnswerChecker, {
+  pathAnswerChecker,
   initFunc,
   EnhancedInterpreter,
   getLineAndCharObject,
@@ -81,7 +82,7 @@ export default function Editor() {
   };
 
   const dispatch = useDispatch();
-  const { currentProblem, submittedCode } = useSelector((state) => state.problem);
+  const { currentProblem, submittedCode, currentKind } = useSelector((state) => state.problem);
   const { isDebugging } = useSelector((state) => state.debug);
   const objective = useSelector((state) => state.modal.objective);
   const { serializedText, currentScope, stepCount, scopeHistory, didClickPrev } = useSelector(
@@ -114,8 +115,13 @@ export default function Editor() {
     }
   }, [stepCount]);
 
-  const handleClickSubmit = (userCode) => {
-    const submitResult = answerChecker(userCode, currentProblem);
+  const handleClickSubmit = ([userCode, currentKind]) => {
+    let submitResult = null;
+    if (currentKind === "tree") {
+      submitResult = treeAnswerChecker(userCode, currentProblem);
+    } else if (currentKind === "path") {
+      submitResult = pathAnswerChecker(userCode, currentProblem);
+    }
 
     dispatch(setSubmittedCode(userCode));
 
@@ -128,16 +134,31 @@ export default function Editor() {
       return;
     }
 
-    if (submitResult.result) {
-      batch(() => {
-        dispatch(setObjective(submitResult.case));
-        dispatch(setIsOpen("Correct"));
-      });
-    } else {
-      batch(() => {
-        dispatch(setObjective(submitResult.case));
-        dispatch(setIsOpen("Incorrect"));
-      });
+    if (currentKind === "path") {
+      if (submitResult) {
+        batch(() => {
+          dispatch(setIsOpen("Correct"));
+        });
+      } else {
+        batch(() => {
+          dispatch(setIsOpen("Incorrect"));
+        });
+      }
+    }
+
+    // tree
+    if (currentKind === "tree") {
+      if (submitResult.result) {
+        batch(() => {
+          dispatch(setObjective(submitResult.case));
+          dispatch(setIsOpen("Correct"));
+        });
+      } else {
+        batch(() => {
+          dispatch(setObjective(submitResult.case));
+          dispatch(setIsOpen("Incorrect"));
+        });
+      }
     }
   };
 
@@ -272,7 +293,10 @@ export default function Editor() {
       />
       {!isDebugging && (
         <div className="submit-button-container">
-          <button className="submit-button" onClick={handleClickSubmit.bind(this, userCode)}>
+          <button
+            className="submit-button"
+            onClick={handleClickSubmit.bind(this, [userCode, currentKind])}
+          >
             ⏩ SUBMIT CODE
           </button>
         </div>

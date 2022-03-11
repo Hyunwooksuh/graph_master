@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import problemSet from "../../asset/problemSet";
 import Node from "./Node/Node";
 import "./Pathfind.css";
 import {
@@ -11,7 +12,7 @@ import {
 } from "../../constant/pathFind";
 import aStar from "../../util/aStar";
 
-class Spot {
+export class Spot {
   constructor(row, column) {
     this.x = row;
     this.y = column;
@@ -22,11 +23,6 @@ class Spot {
     this.h = 0;
     this.neighbors = [];
     this.isWall = false;
-
-    if (Math.random(1) < 0.2) {
-      this.isWall = true;
-    }
-
     this.previous = null;
   }
 
@@ -56,12 +52,13 @@ export default function Pathfind() {
     visualizePath();
   }, [didInit]);
 
-  const initializeGrid = () => {
+  function initializeGrid() {
     const grid = Array.from(new Array(ROWS), () => new Array(COLUMNS));
 
     createSpot(grid);
     setGrid(grid);
     updateNeighbors(grid);
+    createWall(grid, problemSet["shortestPath"].wall);
 
     const startNode = grid[NODE_START_ROW][NODE_START_COL];
     const endNode = grid[NODE_END_ROW][NODE_END_COL];
@@ -71,23 +68,31 @@ export default function Pathfind() {
 
     setPath(path);
     setVisitedNodes(visitedNodes);
-  };
+  }
 
-  const createSpot = (grid) => {
+  function createWall(grid, input) {
+    for (let k = 0; k < input.length; k++) {
+      const { x, y } = input[k];
+
+      grid[x][y].isWall = true;
+    }
+  }
+
+  function createSpot(grid) {
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLUMNS; j++) {
         grid[i][j] = new Spot(i, j);
       }
     }
-  };
+  }
 
-  const updateNeighbors = (grid) => {
+  function updateNeighbors(grid) {
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLUMNS; j++) {
         grid[i][j].addNeighbors(grid, ROWS, COLUMNS);
       }
     }
-  };
+  }
 
   const visualizeShortestPath = (shortestPathNodes) => {
     for (let i = 0; i < shortestPathNodes.length; i++) {

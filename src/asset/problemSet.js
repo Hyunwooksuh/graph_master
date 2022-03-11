@@ -1,3 +1,5 @@
+import pathFind from "../constant/pathFind";
+
 const problemSet = {
   baseTemplate: `  
   /**
@@ -25,6 +27,7 @@ const problemSet = {
   preorderTraversal(input);
   return output; 
 };`,
+    kind: "tree",
     title: "PREORDER TRAVERSAL",
     description:
       "Given the root of a binary tree, return the preorder traversal of its nodes' values.",
@@ -99,7 +102,6 @@ const problemSet = {
         shortInput: "[1]",
         answer: "[1]",
         nativeArrayAnswer: [1],
-        image: false,
       },
       {
         input: `{
@@ -131,7 +133,6 @@ const problemSet = {
         shortInput: "[1, null, 2, 3]",
         answer: "[1, 2, 3]",
         nativeArrayAnswer: [1, 2, 3],
-        image: true,
       },
     ],
   },
@@ -147,6 +148,7 @@ const problemSet = {
   return output; 
 };`,
     title: "INORDER TRAVERSAL",
+    kind: "tree",
     description:
       "Given the root of a binary tree, return the inorder traversal of its nodes' values.",
     cases: [
@@ -164,7 +166,6 @@ const problemSet = {
         shortInput: "[1]",
         answer: "[1]",
         nativeArrayAnswer: [1],
-        image: false,
       },
       {
         input: `{
@@ -196,7 +197,6 @@ const problemSet = {
         shortInput: "[1, null, 2, 3]",
         answer: "[1, 3, 2]",
         nativeArrayAnswer: [1, 3, 2],
-        image: true,
       },
       {
         input: `{
@@ -252,7 +252,6 @@ const problemSet = {
         shortInput: "[1, 3, 7, 9, 5, null, 13]",
         answer: "[7, 3, 9, 1, 5, 13]",
         nativeArrayAnswer: [7, 3, 9, 1, 5, 13],
-        image: true,
       },
     ],
   },
@@ -268,6 +267,7 @@ const problemSet = {
   return output; 
 };`,
     title: "POSTORDER TRAVERSAL",
+    kind: "tree",
     description:
       "Given the root of a binary tree, return the postorder traversal of its nodes' values.",
     cases: [
@@ -284,7 +284,6 @@ const problemSet = {
         },
         shortInput: "[1]",
         answer: "[1]",
-        image: false,
       },
       {
         input: `{
@@ -316,7 +315,6 @@ const problemSet = {
         shortInput: "[1, null, 2, 3]",
         answer: "[3, 2, 1]",
         nativeArrayAnswer: [3, 2, 1],
-        image: true,
       },
       {
         input: `{
@@ -372,7 +370,6 @@ const problemSet = {
         shortInput: "[1, 3, 7, 9, 5, null, 13]",
         answer: "[7, 9, 3, 13, 5, 1]",
         nativeArrayAnswer: [7, 9, 3, 13, 5, 1],
-        image: true,
       },
     ],
   },
@@ -388,6 +385,7 @@ const problemSet = {
   return output; 
 };`,
     title: "LEVEL ORDER TRAVERSAL",
+    kind: "tree",
     description:
       "Given the root of a binary tree, return the level order traversal of its nodes' values.",
     cases: [
@@ -461,7 +459,6 @@ const problemSet = {
         shortInput: "[1]",
         answer: "[1]",
         nativeArrayAnswer: [1],
-        image: false,
       },
       {
         input: `{
@@ -509,49 +506,117 @@ const problemSet = {
         shortInput: "[3, 9, 20, null, null, 15, 7]",
         answer: "[3, 9, 20, 15, 7]",
         nativeArrayAnswer: [3, 9, 20, 15, 7],
-        image: true,
       },
     ],
   },
+  // Path finder problem set
   shortestPath: {
-    baseTemplate: `
-    class Spot {
-      constructor(row, column) {
-        this.x = row;
-        this.y = column;
-        this.isStart = this.x === NODE_START_ROW && this.y === NODE_START_COL;
-        this.isEnd = this.x === NODE_END_ROW && this.y === NODE_END_COL;
-        this.g = 0;
-        this.f = 0;
-        this.h = 0;
-        this.neighbors = [];
-        this.previous = null;
-      }
-    
-      addNeighbors(grid, rows, columns) {
-        const i = this.x;
-        const j = this.y;
-    
-        if (i > 0) this.neighbors.push(grid[i - 1][j]);
-        if (i < rows - 1) this.neighbors.push(grid[i + 1][j]);
-        if (j > 0) this.neighbors.push(grid[i][j - 1]);
-        if (j < columns - 1) this.neighbors.push(grid[i][j + 1]);
-      }
-    }`,
-    template: `function GRAPH_MASTER() {
+    baseTemplate: `/** Definition for each on the grid
+* class Spot {
+*  constructor(row, column) {
+*   this.x = row;
+*   this.y = column;
+*   this.isStart = (x === start_row & this.y === start_col)
+*   this.isEnd = (x === end_row & this.y === end_col)
+*   this.g = 0;
+*   this.f = 0;
+*   this.h = 0;
+*   this.neighbors = []; // adjacent nodes
+*   this.wall = (Boolean)
+*   this.previous = null;
+*  }
+* }
+*/
+`,
+    template: `function GRAPH_MASTER(startSpot, endSpot) {
   // push the elements of shortest path
   const output = [];
-  function pathFinder() {
+  function pathFinder(startSpot, endSpot) {
     // your code
   
   }
   
-  pathFinder();
+  pathFinder(startSpot, endSpot);
   return output; 
-};`,
+};
+
+// heuristic function to evaluate 'h'
+function heuristic (a, b) {
+  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+}`,
+    utils: {
+      createWall: `function createWall(grid, input) {
+        for (let k = 0; k < input.length; k++) {
+          const x = input[k].x;
+          const y = input[k].y;
+    
+          grid[x][y].isWall = true;
+        }
+      }`,
+      createSpot: `function createSpot(grid) {
+        for (let i = 0; i < ROWS; i++) {
+          for (let j = 0; j < COLUMNS; j++) {
+            grid[i][j] = new Spot(i, j);
+          }
+        }
+      }`,
+      updateNeighbors: `function updateNeighbors(grid) {
+        for (let i = 0; i < ROWS; i++) {
+          for (let j = 0; j < COLUMNS; j++) {
+            grid[i][j].addNeighbors(grid, ROWS, COLUMNS);
+          }
+        }
+      }`,
+    },
+    kind: "path",
     title: "A Star algorithm",
     description: "Implement A* algorithm to find the shortest path from green node to red node",
+    wall: [
+      { x: 1, y: 2 },
+      { x: 2, y: 0 },
+      { x: 3, y: 2 },
+      { x: 0, y: 4 },
+      { x: 0, y: 3 },
+      { x: 2, y: 4 },
+    ],
+    stringWall: `[
+      { x: 1, y: 2},
+      { x: 2, y: 0},
+      { x: 3, y: 2},
+      { x: 0, y: 4},
+      { x: 0, y: 3},
+      { x: 2, y: 4},
+    ]`,
+    output: [
+      { x: 3, y: 4 },
+      { x: 3, y: 3 },
+      { x: 2, y: 3 },
+      { x: 2, y: 2 },
+      { x: 2, y: 1 },
+      { x: 1, y: 1 },
+      { x: 1, y: 0 },
+      { x: 0, y: 0 },
+    ],
   },
 };
 
 export default problemSet;
+
+/*
+[
+      { x: 0, y: 2 },
+      { x: 0, y: 6 },
+      { x: 0, y: 8 },
+      { x: 1, y: 3 },
+      { x: 1, y: 7 },
+      { x: 2, y: 4 },
+      { x: 2, y: 5 },
+      { x: 3, y: 1 },
+      { x: 3, y: 6 },
+      { x: 4, y: 5 },
+      { x: 4, y: 8 },
+      { x: 5, y: 2 },
+      { x: 6, y: 6 },
+      { x: 6, y: 7 },
+    ]`
+*/

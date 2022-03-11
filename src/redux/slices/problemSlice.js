@@ -5,10 +5,12 @@ const problemSlices = createSlice({
   initialState: {
     currentProblem: null,
     submittedCode: "",
+    currentKind: null,
   },
   reducers: {
     setProblem: (state, action) => {
-      state.currentProblem = action.payload;
+      state.currentProblem = action.payload.traversal;
+      state.currentKind = action.payload.kind;
     },
     setSubmittedCode: (state, action) => {
       state.submittedCode = action.payload;

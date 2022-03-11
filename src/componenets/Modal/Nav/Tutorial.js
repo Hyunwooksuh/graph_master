@@ -54,13 +54,14 @@ export default function Tutorial() {
 
     dispatch(setIsOpen());
     dispatch(setIsDebugging({ status: false }));
-    dispatch(setProblem(traversal));
 
     if (traversal === "shortestPath") {
-      dispatch(setSubmittedCode(`${problem.template}`));
+      dispatch(setProblem({ traversal: traversal, kind: "path" }));
+      dispatch(setSubmittedCode(`${problem.baseTemplate}\n${problem.template}`));
       return;
     }
 
+    dispatch(setProblem({ traversal: traversal, kind: "tree" }));
     dispatch(setSubmittedCode(`${problemSet.baseTemplate}\n${problem.template}`));
   };
 
