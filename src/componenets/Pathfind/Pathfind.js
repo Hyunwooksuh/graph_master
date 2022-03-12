@@ -55,12 +55,6 @@ export default function Pathfind() {
     visualizePath();
   }, [didInit]);
 
-  useEffect(() => {
-    if (grid.length) {
-      dispatch(setInitialPathGrid(grid));
-    }
-  }, [grid]);
-
   function initializeGrid() {
     const grid = Array.from(new Array(ROWS), () => new Array(COLUMNS));
 

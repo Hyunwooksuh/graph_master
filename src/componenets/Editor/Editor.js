@@ -32,15 +32,6 @@ import treeAnswerChecker, {
   getLineAndCharObject,
 } from "../../lib/enhancedInterpreter";
 import getScopeInformation from "../../lib/parser";
-import {
-  COLUMNS,
-  ROWS,
-  NODE_START_ROW,
-  NODE_START_COL,
-  NODE_END_ROW,
-  NODE_END_COL,
-} from "../../constant/pathFind";
-import Interpreter from "../../lib/interpreter";
 
 window.JSHINT = JSHINT;
 
@@ -244,41 +235,6 @@ export default function Editor() {
     if (currentKind === "tree" && debuggingInfo.raw.node.name === "input" && isDebugging) {
       const pseudoObj = debuggingTarget.nativeToPseudo(objective.nativeInput);
       debuggingTarget.setValueToScope("input", pseudoObj);
-    }
-
-    /* path debugging scope injection */
-    if (currentKind === "path") {
-      // debuggingTarget.setValueToScope("ROWS", ROWS);
-      // debuggingTarget.setValueToScope("COLUMNS", COLUMNS);
-      // debuggingTarget.setValueToScope("NODE_START_ROW", NODE_START_ROW);
-      // debuggingTarget.setValueToScope("NODE_START_COL", NODE_START_COL);
-      // debuggingTarget.setValueToScope("NODE_END_ROW", NODE_END_ROW);
-      // debuggingTarget.setValueToScope("NODE_END_COL", NODE_END_COL);
-      console.log(typeof initialGrid[0][0]);
-      const obj = debuggingTarget.nativeToPseudo(initialGrid[0][0]);
-      console.log(obj);
-
-      // const grid = [];
-      // for (let i = 0; i < initialGrid.length; i++) {
-      //   const result = [];
-      //   for (let j = 0; j < initialGrid[i].length; j++) {
-      //     const obj = await debuggingTarget.nativeToPseudo(initialGrid[i][j]);
-      //     result.push(obj);
-      //   }
-
-      //   const row = debuggingTarget.arrayNativeToPseudo(result);
-      //   grid.push(row);
-      // }
-
-      // debuggingTarget.setValueToScope("grid", debuggingTarget.arrayNativeToPseudo(grid));
-      // debuggingTarget.setValueToScope(
-      //   "startSpot",
-      //   debuggingTarget.nativeToPseudo(initialGrid[NODE_START_ROW][NODE_START_COL]),
-      // );
-      // debuggingTarget.setValueToScope(
-      //   "endSpot",
-      //   debuggingTarget.nativeToPseudo(initialGrid[NODE_END_ROW][NODE_END_COL]),
-      // );
     }
 
     if (graphEditor.current.editor.doc.getAllMarks()) {
