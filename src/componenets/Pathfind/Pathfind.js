@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import problemSet from "../../asset/problemSet";
 import Node from "./Node/Node";
 import "./Pathfind.css";
@@ -11,6 +12,7 @@ import {
   NODE_START_ROW,
 } from "../../constant/pathFind";
 import aStar from "../../util/aStar";
+import { setInitialPathGrid } from "../../redux/slices/scopeSlice";
 
 export class Spot {
   constructor(row, column) {
@@ -42,6 +44,7 @@ export default function Pathfind() {
   const [path, setPath] = useState([]);
   const [visitedNodes, setVisitedNodes] = useState([]);
   const [didInit, setDidInit] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!didInit) {
@@ -51,6 +54,12 @@ export default function Pathfind() {
 
     visualizePath();
   }, [didInit]);
+
+  useEffect(() => {
+    if (grid.length) {
+      dispatch(setInitialPathGrid(grid));
+    }
+  }, [grid]);
 
   function initializeGrid() {
     const grid = Array.from(new Array(ROWS), () => new Array(COLUMNS));

@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { batch, useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { setIsDebugging } from "../../../redux/slices/debuggingSlice";
 import { setIsOpen, setObjective } from "../../../redux/slices/modalSlice";
@@ -36,22 +36,32 @@ const Wrapper = styled.div`
 export default function Incorrect() {
   const dispatch = useDispatch();
   const userSubmittedCode = useSelector((state) => state.problem.submittedCode);
+  const { currentKind } = useSelector((state) => state.problem);
 
   const handleCloseModal = () => {
-    dispatch(setIsOpen());
-    dispatch(setSubmittedCode(""));
-    dispatch(setProblem(null));
+    batch(() => {
+      dispatch(setIsOpen());
+      dispatch(setSubmittedCode(""));
+      dispatch(setProblem(null));
+    });
   };
 
   const handleStartDebugging = () => {
-    dispatch(
-      setIsDebugging({
-        status: true,
-      }),
-    );
+    batch(() => {
+      dispatch(
+        setIsDebugging({
+          status: true,
+        }),
+      );
 
-    dispatch(setSubmittedCode(`${userSubmittedCode}\nGRAPH_MASTER(input);`));
-    dispatch(setIsOpen());
+      if (currentKind === "tree") {
+        dispatch(setSubmittedCode(`${userSubmittedCode}\nGRAPH_MASTER(input);`));
+      } else if (currentKind === "path") {
+        dispatch(setSubmittedCode(`${userSubmittedCode}\nGRAPH_MASTER(startSpot, endSpot);`));
+      }
+
+      dispatch(setIsOpen());
+    });
   };
   return (
     <Wrapper>

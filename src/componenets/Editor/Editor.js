@@ -32,6 +32,15 @@ import treeAnswerChecker, {
   getLineAndCharObject,
 } from "../../lib/enhancedInterpreter";
 import getScopeInformation from "../../lib/parser";
+import {
+  COLUMNS,
+  ROWS,
+  NODE_START_ROW,
+  NODE_START_COL,
+  NODE_END_ROW,
+  NODE_END_COL,
+} from "../../constant/pathFind";
+import Interpreter from "../../lib/interpreter";
 
 window.JSHINT = JSHINT;
 
@@ -85,9 +94,8 @@ export default function Editor() {
   const { currentProblem, submittedCode, currentKind } = useSelector((state) => state.problem);
   const { isDebugging } = useSelector((state) => state.debug);
   const objective = useSelector((state) => state.modal.objective);
-  const { serializedText, currentScope, stepCount, scopeHistory, didClickPrev } = useSelector(
-    (state) => state.scope,
-  );
+  const { serializedText, currentScope, stepCount, scopeHistory, didClickPrev, initialGrid } =
+    useSelector((state) => state.scope);
 
   const debuggingTarget = new EnhancedInterpreter(
     submittedCode,
@@ -134,31 +142,16 @@ export default function Editor() {
       return;
     }
 
-    if (currentKind === "path") {
-      if (submitResult) {
-        batch(() => {
-          dispatch(setIsOpen("Correct"));
-        });
-      } else {
-        batch(() => {
-          dispatch(setIsOpen("Incorrect"));
-        });
-      }
-    }
-
-    // tree
-    if (currentKind === "tree") {
-      if (submitResult.result) {
-        batch(() => {
-          dispatch(setObjective(submitResult.case));
-          dispatch(setIsOpen("Correct"));
-        });
-      } else {
-        batch(() => {
-          dispatch(setObjective(submitResult.case));
-          dispatch(setIsOpen("Incorrect"));
-        });
-      }
+    if (submitResult.result) {
+      batch(() => {
+        dispatch(setObjective({ case: submitResult.case, group: submitResult.group }));
+        dispatch(setIsOpen("Correct"));
+      });
+    } else {
+      batch(() => {
+        dispatch(setObjective({ case: submitResult.case, group: submitResult.group }));
+        dispatch(setIsOpen("Incorrect"));
+      });
     }
   };
 
@@ -172,7 +165,7 @@ export default function Editor() {
       prevOffset = scopeHistory[stepCount - 1].offset;
     }
 
-    if (prevOffset && prevOffset.length === 2) {
+    if (prevOffset && prevOffset[0] && prevOffset[1]) {
       graphEditor.current.editor.doc.markText(prevOffset[0], prevOffset[1], {
         css: "background : rgba(193, 125, 129, 0.6)",
       });
@@ -247,9 +240,45 @@ export default function Editor() {
       currentOutputProperties = currentOutputState;
     }
 
-    if (debuggingInfo.raw.node.name === "input" && isDebugging) {
+    /* tree debugging scope injection */
+    if (currentKind === "tree" && debuggingInfo.raw.node.name === "input" && isDebugging) {
       const pseudoObj = debuggingTarget.nativeToPseudo(objective.nativeInput);
       debuggingTarget.setValueToScope("input", pseudoObj);
+    }
+
+    /* path debugging scope injection */
+    if (currentKind === "path") {
+      // debuggingTarget.setValueToScope("ROWS", ROWS);
+      // debuggingTarget.setValueToScope("COLUMNS", COLUMNS);
+      // debuggingTarget.setValueToScope("NODE_START_ROW", NODE_START_ROW);
+      // debuggingTarget.setValueToScope("NODE_START_COL", NODE_START_COL);
+      // debuggingTarget.setValueToScope("NODE_END_ROW", NODE_END_ROW);
+      // debuggingTarget.setValueToScope("NODE_END_COL", NODE_END_COL);
+      console.log(typeof initialGrid[0][0]);
+      const obj = debuggingTarget.nativeToPseudo(initialGrid[0][0]);
+      console.log(obj);
+
+      // const grid = [];
+      // for (let i = 0; i < initialGrid.length; i++) {
+      //   const result = [];
+      //   for (let j = 0; j < initialGrid[i].length; j++) {
+      //     const obj = await debuggingTarget.nativeToPseudo(initialGrid[i][j]);
+      //     result.push(obj);
+      //   }
+
+      //   const row = debuggingTarget.arrayNativeToPseudo(result);
+      //   grid.push(row);
+      // }
+
+      // debuggingTarget.setValueToScope("grid", debuggingTarget.arrayNativeToPseudo(grid));
+      // debuggingTarget.setValueToScope(
+      //   "startSpot",
+      //   debuggingTarget.nativeToPseudo(initialGrid[NODE_START_ROW][NODE_START_COL]),
+      // );
+      // debuggingTarget.setValueToScope(
+      //   "endSpot",
+      //   debuggingTarget.nativeToPseudo(initialGrid[NODE_END_ROW][NODE_END_COL]),
+      // );
     }
 
     if (graphEditor.current.editor.doc.getAllMarks()) {

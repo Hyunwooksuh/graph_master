@@ -10,7 +10,7 @@ const ChartWrapper = styled.div`
   width: 100%;
 `;
 
-export default function DebuggingGraph() {
+export default function DebuggingTree() {
   const { nativeInput } = useSelector((state) => state.modal.objective);
   const { currentProblem } = useSelector((state) => state.problem);
   const { isDebugging } = useSelector((state) => state.debug);

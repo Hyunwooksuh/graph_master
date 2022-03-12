@@ -12,7 +12,10 @@ const store = configureStore({
     debug: debuggingReducer,
     scope: scopeReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(logger),
 });
 
 export default store;

@@ -72,5 +72,6 @@ export const {
   setDidClickPrev,
   setCurrentOutput,
   setReset,
+  setInitialPathGrid,
 } = scopeSlices.actions;
 export default scopeSlices.reducer;

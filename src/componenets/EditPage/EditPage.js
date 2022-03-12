@@ -11,7 +11,8 @@ import Correct from "../Modal/Result/Correct";
 import Incorrect from "../Modal/Result/Incorrect";
 import Error from "../Modal/Result/Error";
 import Help from "../Modal/Nav/Help";
-import DebuggingGraph from "../Problem/DebuggingGraph";
+import DebuggingTree from "../Problem/DebuggingTree";
+import DebuggingPath from "../Problem/DebuggingPath";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -61,7 +62,7 @@ const PageWrapper = styled.div`
 export default function EditPage() {
   const { isOpen, currentModal } = useSelector((state) => state.modal);
   const { isDebugging } = useSelector((state) => state.debug);
-  const { currentProblem } = useSelector((state) => state.problem);
+  const { currentProblem, currentKind } = useSelector((state) => state.problem);
   const { currentScope } = useSelector((state) => state.scope);
 
   return (
@@ -73,7 +74,8 @@ export default function EditPage() {
         </div>
         <div className="visualizationSection">
           {currentProblem && !isDebugging && <Problem />}
-          {currentProblem && isDebugging && <DebuggingGraph />}
+          {currentKind === "tree" && currentProblem && isDebugging && <DebuggingTree />}
+          {currentKind === "path" && currentProblem && isDebugging && <DebuggingPath />}
         </div>
         {isDebugging && currentScope && (
           <div className="consoleSection">

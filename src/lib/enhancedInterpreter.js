@@ -1,5 +1,4 @@
 import * as Babel from "@babel/standalone";
-import { isEqual } from "lodash";
 import Interpreter from "./interpreter";
 import problemSet from "../asset/problemSet";
 import {
@@ -302,12 +301,28 @@ GRAPH_MASTER(grid[${NODE_START_ROW}][${NODE_START_COL}], grid[${NODE_END_ROW}][$
     const { x, y } = answer[i];
     const outputLoc = output[i];
 
+    if (!outputLoc) {
+      return {
+        result: false,
+        case: problemSet[type].stringOutput,
+        group: "path",
+      };
+    }
+
     if (outputLoc.x !== x && outputLoc.y !== y) {
-      return false;
+      return {
+        result: false,
+        case: problemSet[type].stringOutput,
+        group: "path",
+      };
     }
   }
 
-  return true;
+  return {
+    result: true,
+    case: problemSet[type].stringOutput,
+    group: "path",
+  };
 }
 
 export default function treeAnswerChecker(code, type) {
@@ -335,6 +350,7 @@ export default function treeAnswerChecker(code, type) {
         return {
           result: false,
           case: testCases[i],
+          group: "tree",
         };
       }
     }
@@ -343,6 +359,7 @@ export default function treeAnswerChecker(code, type) {
   return {
     result: true,
     case: testCases[testCases.length - 1],
+    group: "tree",
   };
 }
 

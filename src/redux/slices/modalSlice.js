@@ -7,6 +7,7 @@ const modalSlices = createSlice({
     currentModal: null,
     objective: null,
     error: null,
+    group: null,
   },
   reducers: {
     setIsOpen: (state, action) => {
@@ -14,7 +15,8 @@ const modalSlices = createSlice({
       state.currentModal = action.payload;
     },
     setObjective: (state, action) => {
-      state.objective = action.payload;
+      state.objective = action.payload.case;
+      state.group = action.payload.group;
     },
     setError: (state, action) => {
       state.error = action.payload;
