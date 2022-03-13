@@ -34,6 +34,8 @@ import treeAnswerChecker, {
   getLineAndCharObject,
 } from "../../lib/enhancedInterpreter";
 import getScopeInformation from "../../lib/parser";
+import { markUserVisitedPath, clearPath } from "../Pathfind/Pathfind";
+import { COLUMNS, ROWS } from "../../constant/pathFind";
 
 window.JSHINT = JSHINT;
 
@@ -140,6 +142,7 @@ export default function Editor() {
         dispatch(setObjective({ case: submitResult.case, group: submitResult.group }));
         dispatch(setIsOpen("Correct"));
 
+        // path finder result
         if (submitResult.path.opt_path && submitResult.path.visited_nodes) {
           batch(() => {
             dispatch(
@@ -160,6 +163,7 @@ export default function Editor() {
         dispatch(setObjective({ case: submitResult.case, group: submitResult.group }));
         dispatch(setIsOpen("Incorrect"));
 
+        // path finder result
         if (submitResult.path.opt_path && submitResult.path.visited_nodes) {
           batch(() => {
             dispatch(
@@ -297,6 +301,7 @@ export default function Editor() {
     });
   };
   const handleClickRestart = () => {
+    clearPath(ROWS, COLUMNS);
     dispatch(togglePathVisualize(true));
   };
 

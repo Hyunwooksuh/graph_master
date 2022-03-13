@@ -39,6 +39,35 @@ export class Spot {
   }
 }
 
+export const markUserVisitedPath = async (userVisitedNodes, optimizedPath) => {
+  for (let i = 0; i <= userVisitedNodes.length; i++) {
+    if (i === userVisitedNodes.length) {
+      setTimeout(() => {
+        for (let i = 0; i < optimizedPath.length; i++) {
+          setTimeout(() => {
+            const node = optimizedPath[i];
+            document.getElementById(`node-${node.x}-${node.y}`).innerHTML =
+              "<img width=60px height=60px src=https://cdn-icons-png.flaticon.com/512/684/684462.png >";
+          }, 200 * i);
+        }
+      }, 500 * i);
+    } else {
+      const { x, y } = userVisitedNodes[i];
+      setTimeout(() => {
+        document.getElementById(`node-${x}-${y}`).innerText = `${i}`;
+      }, 500 * i);
+    }
+  }
+};
+
+export const clearPath = (row, col) => {
+  for (let i = 0; i < row; i++) {
+    for (let j = 0; j < col; j++) {
+      document.getElementById(`node-${i}-${j}`).innerHTML = "";
+    }
+  }
+};
+
 export default function Pathfind() {
   const [grid, setGrid] = useState([]);
   const [path, setPath] = useState([]);
@@ -62,6 +91,7 @@ export default function Pathfind() {
     if (userVisitedNodes && optimizedPath) {
       if (userVisitedNodes.length > 0 && optimizedPath.length > 0 && onPathVisualize) {
         markUserVisitedPath(userVisitedNodes, optimizedPath);
+        dispatch(togglePathVisualize(false));
       }
     }
   }, [userVisitedNodes, optimizedPath, onPathVisualize]);
@@ -130,29 +160,6 @@ export default function Pathfind() {
         }, 50 * i);
       }
     }
-  };
-
-  const markUserVisitedPath = async (userVisitedNodes, optimizedPath) => {
-    for (let i = 0; i <= userVisitedNodes.length; i++) {
-      if (i === userVisitedNodes.length) {
-        setTimeout(() => {
-          for (let i = 0; i < optimizedPath.length; i++) {
-            setTimeout(() => {
-              const node = optimizedPath[i];
-              document.getElementById(`node-${node.x}-${node.y}`).innerHTML =
-                "<img width=60px height=60px src=https://cdn-icons-png.flaticon.com/512/684/684462.png >";
-            }, 200 * i);
-          }
-        }, 500 * i);
-      } else {
-        const { x, y } = userVisitedNodes[i];
-        setTimeout(() => {
-          document.getElementById(`node-${x}-${y}`).innerText = `${i}`;
-        }, 500 * i);
-      }
-    }
-
-    dispatch(togglePathVisualize(false));
   };
 
   const gridWithNode = (

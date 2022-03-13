@@ -144,7 +144,6 @@ function NativeNestedObjectToPseudoObject(node) {
   return `${shortenedInput}`;
 }
 
-// 보류
 function getNodeValue(state) {
   const { node } = state;
   switch (node.type) {
