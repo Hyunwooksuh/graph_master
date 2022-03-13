@@ -5,6 +5,7 @@ import { setIsOpen } from "../../../redux/slices/modalSlice";
 import { setProblem, setSubmittedCode } from "../../../redux/slices/problemSlice";
 import { setIsDebugging } from "../../../redux/slices/debuggingSlice";
 import problemSet from "../../../asset/problemSet";
+import { setOptPath, setVisitedNodes } from "../../../redux/slices/scopeSlice";
 
 const Wrapper = styled.div`
   display: grid;
@@ -52,8 +53,11 @@ export default function Tutorial() {
   const handleSelectProblem = (traversal) => {
     const problem = problemSet[traversal];
 
+    // reset redux state
     dispatch(setIsOpen());
     dispatch(setIsDebugging({ status: false }));
+    dispatch(setOptPath([]));
+    dispatch(setVisitedNodes([]));
 
     if (traversal === "shortestPath") {
       dispatch(setProblem({ traversal: traversal, kind: "path" }));

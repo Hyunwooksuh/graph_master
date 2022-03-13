@@ -2,8 +2,12 @@ import React from "react";
 import { batch, useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { setIsDebugging } from "../../../redux/slices/debuggingSlice";
-import { setIsOpen, setObjective } from "../../../redux/slices/modalSlice";
-import { setSubmittedCode, setProblem } from "../../../redux/slices/problemSlice";
+import { setIsOpen } from "../../../redux/slices/modalSlice";
+import {
+  setSubmittedCode,
+  setProblem,
+  togglePathVisualize,
+} from "../../../redux/slices/problemSlice";
 
 const Wrapper = styled.div`
   display: grid;
@@ -54,10 +58,14 @@ export default function Incorrect() {
         }),
       );
 
+      if (currentKind === "path") {
+        dispatch(togglePathVisualize(true));
+      }
+
       if (currentKind === "tree") {
         dispatch(setSubmittedCode(`${userSubmittedCode}\nGRAPH_MASTER(input);`));
       } else if (currentKind === "path") {
-        dispatch(setSubmittedCode(`${userSubmittedCode}\nGRAPH_MASTER(startSpot, endSpot);`));
+        dispatch(setSubmittedCode(`${userSubmittedCode}`));
       }
 
       dispatch(setIsOpen());
@@ -73,7 +81,7 @@ export default function Incorrect() {
       </div>
       <div className="incorrect-modal-button">
         <button onClick={handleCloseModal}>아뇨, 다른 문제를 풀겠습니다.</button>
-        <button onClick={handleStartDebugging}>네, 디버깅을 해보겠습니다.</button>
+        <button onClick={handleStartDebugging}>네, 시각화를 해보겠습니다.</button>
       </div>
     </Wrapper>
   );

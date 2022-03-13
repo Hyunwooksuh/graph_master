@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector, batch } from "react-redux";
 import styled from "styled-components";
 import { setError, setIsOpen, setObjective } from "../../redux/slices/modalSlice";
-import { setSubmittedCode } from "../../redux/slices/problemSlice";
+import { setSubmittedCode, togglePathVisualize } from "../../redux/slices/problemSlice";
 import {
   setScopeProperties,
   setSerializedText,
@@ -23,6 +23,8 @@ import {
   setCurrentScope,
   setDidClickPrev,
   setCurrentOutput,
+  setOptPath,
+  setVisitedNodes,
 } from "../../redux/slices/scopeSlice";
 import { serialize, deserialize } from "../../lib/serialize";
 import treeAnswerChecker, {
@@ -137,11 +139,41 @@ export default function Editor() {
       batch(() => {
         dispatch(setObjective({ case: submitResult.case, group: submitResult.group }));
         dispatch(setIsOpen("Correct"));
+
+        if (submitResult.path.opt_path && submitResult.path.visited_nodes) {
+          batch(() => {
+            dispatch(
+              setOptPath({
+                opt_path: submitResult.path.opt_path,
+              }),
+            );
+            dispatch(
+              setVisitedNodes({
+                visited_nodes: submitResult.path.visited_nodes,
+              }),
+            );
+          });
+        }
       });
     } else {
       batch(() => {
         dispatch(setObjective({ case: submitResult.case, group: submitResult.group }));
         dispatch(setIsOpen("Incorrect"));
+
+        if (submitResult.path.opt_path && submitResult.path.visited_nodes) {
+          batch(() => {
+            dispatch(
+              setOptPath({
+                opt_path: submitResult.path.opt_path,
+              }),
+            );
+            dispatch(
+              setVisitedNodes({
+                visited_nodes: submitResult.path.visited_nodes,
+              }),
+            );
+          });
+        }
       });
     }
   };
@@ -264,6 +296,9 @@ export default function Editor() {
       );
     });
   };
+  const handleClickRestart = () => {
+    dispatch(togglePathVisualize(true));
+  };
 
   return (
     <Wrapper>
@@ -286,7 +321,7 @@ export default function Editor() {
           </button>
         </div>
       )}
-      {isDebugging && (
+      {isDebugging && currentKind === "tree" && (
         <div className="debugging-button-container">
           <button
             disabled={prevButtonDisabled}
@@ -301,6 +336,13 @@ export default function Editor() {
             onClick={handleClickNextStep}
           >
             NEXT STEP
+          </button>
+        </div>
+      )}
+      {isDebugging && currentKind === "path" && (
+        <div className="debugging-button-container">
+          <button className="debugging-button" onClick={handleClickRestart}>
+            RESTART
           </button>
         </div>
       )}

@@ -6,6 +6,7 @@ const problemSlices = createSlice({
     currentProblem: null,
     submittedCode: "",
     currentKind: null,
+    onPathVisualize: false,
   },
   reducers: {
     setProblem: (state, action) => {
@@ -15,8 +16,11 @@ const problemSlices = createSlice({
     setSubmittedCode: (state, action) => {
       state.submittedCode = action.payload;
     },
+    togglePathVisualize: (state, action) => {
+      state.onPathVisualize = action.payload;
+    },
   },
 });
 
-export const { setProblem, setSubmittedCode } = problemSlices.actions;
+export const { setProblem, setSubmittedCode, togglePathVisualize } = problemSlices.actions;
 export default problemSlices.reducer;

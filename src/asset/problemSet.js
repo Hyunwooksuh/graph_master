@@ -16,6 +16,7 @@ const problemSet = {
   * @return {number[]}
   */
  `,
+  // Tree traversal problem set
   preorder: {
     template: `function GRAPH_MASTER(input) {
   const output = [];
@@ -32,6 +33,21 @@ const problemSet = {
     description:
       "Given the root of a binary tree, return the preorder traversal of its nodes' values.",
     cases: [
+      {
+        input: `{
+          val: 1,
+          left: null,
+          right: null,
+        }`,
+        nativeInput: {
+          val: 1,
+          left: null,
+          right: null,
+        },
+        shortInput: "[1]",
+        answer: "[1]",
+        nativeArrayAnswer: [1],
+      },
       {
         input: `{
           val: 1,
@@ -87,21 +103,6 @@ const problemSet = {
         answer: "[1, 3, 7, 9, 5, 13]",
         nativeArrayAnswer: [1, 3, 7, 9, 5, 13],
         image: true,
-      },
-      {
-        input: `{
-          val: 1,
-          left: null,
-          right: null,
-        }`,
-        nativeInput: {
-          val: 1,
-          left: null,
-          right: null,
-        },
-        shortInput: "[1]",
-        answer: "[1]",
-        nativeArrayAnswer: [1],
       },
       {
         input: `{
@@ -392,6 +393,21 @@ const problemSet = {
       {
         input: `{
           val: 1,
+          left: null,
+          right: null,
+        }`,
+        nativeInput: {
+          val: 1,
+          left: null,
+          right: null,
+        },
+        shortInput: "[1]",
+        answer: "[1]",
+        nativeArrayAnswer: [1],
+      },
+      {
+        input: `{
+          val: 1,
           left: {
             val: 3,
             left: {
@@ -444,21 +460,6 @@ const problemSet = {
         answer: "[1, 3, 5, 7, 9, 13]",
         nativeArrayAnswer: [1, 3, 5, 7, 9, 13],
         image: true,
-      },
-      {
-        input: `{
-          val: 1,
-          left: null,
-          right: null,
-        }`,
-        nativeInput: {
-          val: 1,
-          left: null,
-          right: null,
-        },
-        shortInput: "[1]",
-        answer: "[1]",
-        nativeArrayAnswer: [1],
       },
       {
         input: `{
@@ -531,13 +532,14 @@ const problemSet = {
     template: `function GRAPH_MASTER(startSpot, endSpot) {
   // push the elements of shortest path
   const output = [];
+  const visitedNodes = [];
   function pathFinder(startSpot, endSpot) {
     // your code
   
   }
   
   pathFinder(startSpot, endSpot);
-  return output; 
+  return { output: output, visitedNodes: visitedNodes }; 
 };
 
 // heuristic function to evaluate 'h'
@@ -595,7 +597,7 @@ function heuristic (a, b) {
       { x: 2, y: 1 },
       { x: 1, y: 1 },
       { x: 1, y: 0 },
-      { x: 0, y: 0 },
+      { x: 0, y: 0 }
     ]`,
     output: [
       { x: 3, y: 4 },

@@ -281,8 +281,7 @@ export function pathAnswerChecker(code, type) {
   ${problemSet[type].utils.createSpot}
   ${problemSet[type].utils.updateNeighbors}
   ${code}
-GRAPH_MASTER(grid[${NODE_START_ROW}][${NODE_START_COL}], grid[${NODE_END_ROW}][${NODE_END_COL}]);
-`;
+GRAPH_MASTER(grid[${NODE_START_ROW}][${NODE_START_COL}], grid[${NODE_END_ROW}][${NODE_END_COL}]);`;
 
   const transformedCode = Babel.transform(fullCode, { presets: ["es2015"] }).code;
   const checker = new EnhancedInterpreter(transformedCode, initFunc);
@@ -294,7 +293,21 @@ GRAPH_MASTER(grid[${NODE_START_ROW}][${NODE_START_COL}], grid[${NODE_END_ROW}][$
     };
   }
 
-  const output = checker.pseudoToNative(checker.value);
+  const output = checker.pseudoToNative(checker.value.properties.output);
+  const visitedNodesArray = Array.from(checker.value.properties.visitedNodes.properties).map(
+    (el) => {
+      const { x, y } = el.properties;
+
+      return { x: x, y: y };
+    },
+  );
+
+  const shortestPath = output.map((el) => {
+    const { x, y } = el;
+
+    return { x: x, y: y };
+  });
+
   const answer = problemSet[type].output;
 
   for (let i = 0; i < answer.length; i++) {
@@ -304,7 +317,8 @@ GRAPH_MASTER(grid[${NODE_START_ROW}][${NODE_START_COL}], grid[${NODE_END_ROW}][$
     if (!outputLoc) {
       return {
         result: false,
-        case: problemSet[type].stringOutput,
+        case: problemSet[type].output,
+        path: { opt_path: null, visited_nodes: null },
         group: "path",
       };
     }
@@ -312,7 +326,8 @@ GRAPH_MASTER(grid[${NODE_START_ROW}][${NODE_START_COL}], grid[${NODE_END_ROW}][$
     if (outputLoc.x !== x && outputLoc.y !== y) {
       return {
         result: false,
-        case: problemSet[type].stringOutput,
+        case: problemSet[type].output,
+        path: { opt_path: shortestPath, visited_nodes: visitedNodesArray },
         group: "path",
       };
     }
@@ -320,7 +335,8 @@ GRAPH_MASTER(grid[${NODE_START_ROW}][${NODE_START_COL}], grid[${NODE_END_ROW}][$
 
   return {
     result: true,
-    case: problemSet[type].stringOutput,
+    case: problemSet[type].output,
+    path: { opt_path: shortestPath, visited_nodes: visitedNodesArray },
     group: "path",
   };
 }

@@ -28,7 +28,8 @@ const PageWrapper = styled.div`
   }
 
   .visualizationSection {
-    width: ${(props) => (props.isDebugging && props.currentScope ? "47%" : "65%")};
+    width: ${(props) =>
+      props.isDebugging && props.currentScope && props.currentKind === "tree" ? "47%" : "65%"};
     margin: 0 1%;
     background-color: floralwhite;
     border-radius: 20px;
@@ -67,7 +68,7 @@ export default function EditPage() {
 
   return (
     <>
-      <PageWrapper isDebugging={isDebugging} currentScope={currentScope}>
+      <PageWrapper isDebugging={isDebugging} currentScope={currentScope} currentKind={currentKind}>
         <div className="editorSection">
           <NavBar />
           <Editor />
@@ -77,7 +78,7 @@ export default function EditPage() {
           {currentKind === "tree" && currentProblem && isDebugging && <DebuggingTree />}
           {currentKind === "path" && currentProblem && isDebugging && <DebuggingPath />}
         </div>
-        {isDebugging && currentScope && (
+        {isDebugging && currentScope && currentKind === "tree" && (
           <div className="consoleSection">
             {currentScope.length > 0 && (
               <div>

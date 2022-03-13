@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import problemSet from "../../asset/problemSet";
 import Node from "./Node/Node";
 import "./Pathfind.css";
@@ -12,7 +12,7 @@ import {
   NODE_START_ROW,
 } from "../../constant/pathFind";
 import aStar from "../../util/aStar";
-import { setInitialPathGrid } from "../../redux/slices/scopeSlice";
+import { togglePathVisualize } from "../../redux/slices/problemSlice";
 
 export class Spot {
   constructor(row, column) {
@@ -45,6 +45,9 @@ export default function Pathfind() {
   const [visitedNodes, setVisitedNodes] = useState([]);
   const [didInit, setDidInit] = useState(false);
   const dispatch = useDispatch();
+  const userVisitedNodes = useSelector((state) => state.scope.visitedNodes);
+  const optimizedPath = useSelector((state) => state.scope.optimizedPath);
+  const { onPathVisualize } = useSelector((state) => state.problem);
 
   useEffect(() => {
     if (!didInit) {
@@ -54,6 +57,14 @@ export default function Pathfind() {
 
     visualizePath();
   }, [didInit]);
+
+  useEffect(() => {
+    if (userVisitedNodes && optimizedPath) {
+      if (userVisitedNodes.length > 0 && optimizedPath.length > 0 && onPathVisualize) {
+        markUserVisitedPath(userVisitedNodes, optimizedPath);
+      }
+    }
+  }, [userVisitedNodes, optimizedPath, onPathVisualize]);
 
   function initializeGrid() {
     const grid = Array.from(new Array(ROWS), () => new Array(COLUMNS));
@@ -102,7 +113,7 @@ export default function Pathfind() {
       setTimeout(() => {
         const node = shortestPathNodes[i];
         document.getElementById(`node-${node.x}-${node.y}`).className = "node node-shortest-path";
-      }, 10 * i);
+      }, 50 * i);
     }
   };
 
@@ -111,14 +122,37 @@ export default function Pathfind() {
       if (i === visitedNodes.length) {
         setTimeout(() => {
           visualizeShortestPath(path);
-        }, 20 * i);
+        }, 50 * i);
       } else {
         setTimeout(() => {
           const node = visitedNodes[i];
           document.getElementById(`node-${node.x}-${node.y}`).className = "node node-visited";
-        }, 20 * i);
+        }, 50 * i);
       }
     }
+  };
+
+  const markUserVisitedPath = async (userVisitedNodes, optimizedPath) => {
+    for (let i = 0; i <= userVisitedNodes.length; i++) {
+      if (i === userVisitedNodes.length) {
+        setTimeout(() => {
+          for (let i = 0; i < optimizedPath.length; i++) {
+            setTimeout(() => {
+              const node = optimizedPath[i];
+              document.getElementById(`node-${node.x}-${node.y}`).innerHTML =
+                "<img width=60px height=60px src=https://cdn-icons-png.flaticon.com/512/684/684462.png >";
+            }, 200 * i);
+          }
+        }, 500 * i);
+      } else {
+        const { x, y } = userVisitedNodes[i];
+        setTimeout(() => {
+          document.getElementById(`node-${x}-${y}`).innerText = `${i}`;
+        }, 500 * i);
+      }
+    }
+
+    dispatch(togglePathVisualize(false));
   };
 
   const gridWithNode = (

@@ -25,6 +25,11 @@
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
   animation-play-state: running;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 @keyframes visitedAnimation {
@@ -62,6 +67,11 @@
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
   animation-play-state: running;
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 @keyframes shortestPath {
