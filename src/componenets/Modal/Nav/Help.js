@@ -50,6 +50,15 @@ export default function Help() {
           </p>
         </div>
         <div>
+          <div>🙋‍♂️ 추가 메소드</div>
+          <p className="help-details">
+            isObjEqual 과 includes 메소드의 경우, 추가 지원됩니다. isObjEqual의 경우
+            isObjEqual(Object, Object)과 같이 사용가능하며, 두 객체를 깊은 수준에서 비교하여 Boolean
+            값을 반환합니다. includes는 includes(Array, AnyTypeObject)과 같이 사용 가능하며, 모든
+            형태의 객체에 대해서 해당 배열에 포함되었는 지 여부를 판단하여, Boolean값을 반환합니다.
+          </p>
+        </div>
+        <div>
           <div>🙋‍♂️ 디버깅</div>
           <p className="help-details">
             무한루프와 같은 런타임 에러의 경우 팝업창에서 확인 가능하며, 구문(Syntax)에러의 경우
