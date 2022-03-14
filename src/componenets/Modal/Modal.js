@@ -13,8 +13,8 @@ const ModalStyle = styled.div`
   top: 40%;
   left: 50%;
   width: 35rem;
-  height: 25rem;
-  transform: translate(-50%, -50%);
+  height: 30rem;
+  transform: translate(-50%, -40%);
   background-color: beige;
   z-index: 1000;
   padding: 40px;
