@@ -68,6 +68,30 @@ export const clearPath = (row, col) => {
   }
 };
 
+export function createWall(grid, input) {
+  for (let k = 0; k < input.length; k++) {
+    const { x, y } = input[k];
+
+    grid[x][y].isWall = true;
+  }
+}
+
+export function createSpot(grid) {
+  for (let i = 0; i < ROWS; i++) {
+    for (let j = 0; j < COLUMNS; j++) {
+      grid[i][j] = new Spot(i, j);
+    }
+  }
+}
+
+export function updateNeighbors(grid) {
+  for (let i = 0; i < ROWS; i++) {
+    for (let j = 0; j < COLUMNS; j++) {
+      grid[i][j].addNeighbors(grid, ROWS, COLUMNS);
+    }
+  }
+}
+
 export default function Pathfind() {
   const [grid, setGrid] = useState([]);
   const [path, setPath] = useState([]);
@@ -112,30 +136,6 @@ export default function Pathfind() {
 
     setPath(path);
     setVisitedNodes(visitedNodes);
-  }
-
-  function createWall(grid, input) {
-    for (let k = 0; k < input.length; k++) {
-      const { x, y } = input[k];
-
-      grid[x][y].isWall = true;
-    }
-  }
-
-  function createSpot(grid) {
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLUMNS; j++) {
-        grid[i][j] = new Spot(i, j);
-      }
-    }
-  }
-
-  function updateNeighbors(grid) {
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLUMNS; j++) {
-        grid[i][j].addNeighbors(grid, ROWS, COLUMNS);
-      }
-    }
   }
 
   const visualizeShortestPath = (shortestPathNodes) => {

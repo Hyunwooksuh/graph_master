@@ -572,7 +572,7 @@ function heuristic (a, b) {
     },
     kind: "path",
     title: "A Star algorithm",
-    description: "Implement A* algorithm to find the shortest path from green node to red node",
+    description: "Implement A* algorithm to find the shortest path from start node to end node",
     wall: [
       { x: 1, y: 2 },
       { x: 2, y: 0 },
