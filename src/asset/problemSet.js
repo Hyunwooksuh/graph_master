@@ -285,6 +285,7 @@ const problemSet = {
         },
         shortInput: "[1]",
         answer: "[1]",
+        nativeArrayAnswer: [1],
       },
       {
         input: `{

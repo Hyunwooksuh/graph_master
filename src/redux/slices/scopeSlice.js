@@ -69,6 +69,16 @@ const scopeSlices = createSlice({
     setVisitedNodes: (state, action) => {
       state.visitedNodes = action.payload.visited_nodes;
     },
+    resetScope: (state, action) => {
+      state.currentScope = [];
+      state.currentOutput = null;
+      state.scopeArray = [];
+      state.scopeHistory = [];
+      state.outputHistory = [];
+      state.serializedText = null;
+      state.stepCount = -1;
+      state.didClickPrev = false;
+    },
   },
 });
 
@@ -84,5 +94,6 @@ export const {
   setInitialPathGrid,
   setOptPath,
   setVisitedNodes,
+  resetScope,
 } = scopeSlices.actions;
 export default scopeSlices.reducer;

@@ -5,6 +5,7 @@
   align-items: center;
   background: darkslategray;
   border-radius: 10px;
+  width: 100%;
 }
 
 .nav-text {

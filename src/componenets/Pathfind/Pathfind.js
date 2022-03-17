@@ -13,6 +13,7 @@ import {
 } from "../../constant/pathFind";
 import aStar from "../../util/aStar";
 import { togglePathVisualize } from "../../redux/slices/problemSlice";
+import { EnhancedInterpreter } from "../../lib/enhancedInterpreter";
 
 export class Spot {
   constructor(row, column) {
