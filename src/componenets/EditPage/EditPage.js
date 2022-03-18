@@ -13,6 +13,7 @@ import Error from "../Modal/Result/Error";
 import Help from "../Modal/Nav/Help";
 import DebuggingTree from "../Problem/DebuggingTree";
 import DebuggingPath from "../Problem/DebuggingPath";
+import { arrayToString } from "../../lib/parser";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -64,7 +65,9 @@ export default function EditPage() {
   const { isOpen, currentModal } = useSelector((state) => state.modal);
   const { isDebugging } = useSelector((state) => state.debug);
   const { currentProblem, currentKind } = useSelector((state) => state.problem);
-  const { currentScope } = useSelector((state) => state.scope);
+  const { currentScope, currentOutput } = useSelector((state) => state.scope);
+  const convertedCurrentOutput =
+    currentOutput && currentOutput.length >= 0 ? arrayToString(Array.from(currentOutput)) : "[]";
 
   return (
     <>
@@ -101,6 +104,10 @@ export default function EditPage() {
                       </div>
                     );
                   })}
+                  <div className="scope-element">
+                    <div className="scope-element-key">Current Output</div>
+                    <div>{convertedCurrentOutput}</div>
+                  </div>
                 </div>
               </div>
             )}

@@ -76,8 +76,6 @@ const heuristic = (a, b) => {
 
 // let openSet = [];
 // const closedSet = [];
-// const visitedNodes = [];
-
 // openSet.push(startSpot);
 
 // while (openSet.length > 0) {
@@ -132,5 +130,4 @@ const heuristic = (a, b) => {
 //       }
 //     }
 //   }
-
 // }

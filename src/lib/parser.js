@@ -76,7 +76,7 @@ export default function getScopeInformation(scope) {
         } else if (value.class === "Array") {
           nativeLocalScope[key] = {
             type: "Array",
-            value: arrayToString(value),
+            value: arrayToString(getValueOfNestArray(value)),
           };
         } else {
           let obj = "{";
@@ -116,8 +116,33 @@ export default function getScopeInformation(scope) {
   return nativeLocalScope;
 }
 
+function getValueOfNestArray(node) {
+  console.log(node);
+  const attr = node.properties;
+  const result = [];
+
+  if (attr.length) {
+    for (let i = 0; i < attr.length; i++) {
+      if (!attr[i].properties) {
+        result.push(attr[i]);
+        continue;
+      }
+
+      if (attr[i].properties.val) {
+        result.push(attr[i].properties.val);
+      }
+    }
+  }
+
+  return result;
+}
+
 export function arrayToString(node) {
-  return `[${Object.values(node.properties)}]`;
+  if (node.properties) {
+    return `[${Object.values(node.properties)}]`;
+  }
+
+  return `[${Object.values(node)}]`;
 }
 
 function getClassType(obj) {
