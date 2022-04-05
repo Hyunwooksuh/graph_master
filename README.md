@@ -2,6 +2,9 @@
 
 **Graph master**는 트리 및 그래프 순회를 처음 접하는 학습자가 시각화와 함께 그래프 순회를 학습할 수 있는 어플리케이션입니다.
 
+https://www.youtube.com/watch?v=qK6cUlsBSUg
+시연영상: 2:26:40~2:35:47
+
 **[1. 문제풀이]**
 
 <img width="750" alt="image" src="https://user-images.githubusercontent.com/65224203/159246825-4f775775-b455-427b-a504-f7b47e3a3864.png">
