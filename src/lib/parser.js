@@ -117,7 +117,6 @@ export default function getScopeInformation(scope) {
 }
 
 function getValueOfNestArray(node) {
-  console.log(node);
   const attr = node.properties;
   const result = [];
 

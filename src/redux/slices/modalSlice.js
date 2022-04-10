@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const modalSlices = createSlice({
   name: "modal",
   initialState: {
-    isOpen: false,
-    currentModal: null,
+    isOpen: true,
+    currentModal: "Tutorial",
     objective: null,
     error: null,
     group: null,
